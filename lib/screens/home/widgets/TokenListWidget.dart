@@ -1,0 +1,63 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:nuzai_wallet/podo/Token.dart';
+import 'package:nuzai_wallet/podo/User.dart';
+import 'package:nuzai_wallet/screens/TokenTransactionsScreen.dart';
+import 'package:nuzai_wallet/screens/home/widgets/EmptyListWidget.dart';
+import 'package:nuzai_wallet/service/RestClient.dart';
+import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+
+Widget tokensList(BuildContext context, User user) {
+  List<Token> tokens = [];
+  return FutureBuilder(
+    future: RestClient.loadTokens(
+        user.token!, user.defaultNetwork!, user.wallet!),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        tokens = snapshot.data!;
+      }
+      if (snapshot.hasData) {
+        return tokens.isNotEmpty
+            ? SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 245, 244, 248),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                      tokens.length,
+                          (index) => ListTile(
+                        onTap: (){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => TokenTransactionsScreen(token: tokens[index], user: user,)));
+                        },
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        leading: Image.network(tokens[index].image!, scale: 1.5,),
+                        title: Text(tokens[index].ticker!),
+                        subtitle: Text(tokens[index].name!),
+                        trailing: Text(tokens[index].balance!),
+                      ))),
+            ),
+          ),
+        )
+            : emptyList("tokens", context);
+      } else {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CustomLoader(),
+            SizedBox(height: 16),
+            Text("Loading..."),
+          ],
+        );
+      }
+    },
+  );
+}

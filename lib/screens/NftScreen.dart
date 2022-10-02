@@ -1,0 +1,131 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:nuzai_wallet/podo/NFT.dart';
+
+class NftPage extends StatefulWidget {
+  final NFT nft;
+
+  const NftPage({Key? key, required this.nft}) : super(key: key);
+
+  @override
+  State<NftPage> createState() => _NftPageState();
+}
+
+class _NftPageState extends State<NftPage> {
+  @override
+  Widget build(BuildContext context) {
+    NFT nft = widget.nft;
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: SizedBox(
+        width: double.infinity,
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 300,
+                    child: Image.network(
+                      nft.image!,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: SizedBox(
+                      height: 60,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: buttonStyle,
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Image.asset("assets/icons/eye_icon.png",
+                                  height: 10, width: 16),
+                            ),
+                            const Text("See in AR"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(245, 244, 248, 1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(nft.title![0], style: textTheme.headline4!.copyWith(color: Color.fromRGBO(55, 135, 254, 1)),),
+                              Text(nft.title!.substring(1, nft.title!.length), style: textTheme.headline4,),
+                            ],
+                          ),
+                          Text(
+                            nft.description!.isEmpty
+                                ? "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Metus aliquam eleifend mi in nulla posuere. Ut etiam sit amet nisl purus. "
+                                : nft.description!,
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 60,
+                          child: ElevatedButton(
+                            style: buttonStyle,
+                            onPressed: () {},
+                            child: const Text("Send"),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          height: 60,
+                          child: ElevatedButton(
+                            style: buttonStyle,
+                            onPressed: () {},
+                            child: const Text("Sell"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )),
+      ),
+    );
+  }
+
+  ButtonStyle buttonStyle = ButtonStyle(
+      backgroundColor:
+          const MaterialStatePropertyAll(Color.fromRGBO(55, 135, 254, 0.9)),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      )));
+}
