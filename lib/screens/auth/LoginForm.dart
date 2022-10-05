@@ -63,7 +63,6 @@ class _LoginFormState extends State<LoginForm> {
                 child: const Text("Scan to login"))
             : Form(
                 key: _form,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     TextFormField(
@@ -117,29 +116,7 @@ class _LoginFormState extends State<LoginForm> {
                           height: 48,
                           child: ElevatedButton(
                             onPressed: () async {
-                              http.Response? response;
-                              if (validator == null) {
-                                response = await RestClient.auth(emailController.text, passController.text);
-                              }
-                              if (response != null &&
-                                  response.statusCode == 200) {
-                                User user = User.fromJson(
-                                    json.decode(response.body)["bodyResponse"]);
-                                FlutterSecureStorage storage =
-                                    const FlutterSecureStorage();
-                                storage.write(
-                                    key: "email", value: emailController.text);
-                                storage.write(
-                                    key: "password",
-                                    value: passController.text);
-                                await storage.write(
-                                    key: "user", value: jsonEncode(user));
-                                notifier.setToken(user.token ?? "");
-                                emailController.text = "";
-                                passController.text = "";
-                              } else {
-                                print(response?.statusCode);
-                              }
+                              login(notifier);
                             },
                             child: const Text("Sign In"),
                           )),
@@ -163,5 +140,31 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<bool> getScanned() async {
     return false;
+  }
+
+  void login(TokenNotifier notifier) async {
+    http.Response? response;
+    if (_form.currentState!.validate()) {
+      response = await RestClient.auth(emailController.text, passController.text);
+    }
+    if (response != null &&
+        response.statusCode == 200) {
+      User user = User.fromJson(
+          json.decode(response.body)["bodyResponse"]);
+      FlutterSecureStorage storage =
+      const FlutterSecureStorage();
+      storage.write(
+          key: "email", value: emailController.text);
+      storage.write(
+          key: "password",
+          value: passController.text);
+      await storage.write(
+          key: "user", value: jsonEncode(user));
+      notifier.setToken(user.token ?? "");
+      emailController.text = "";
+      passController.text = "";
+    } else {
+      print(response?.statusCode);
+    }
   }
 }

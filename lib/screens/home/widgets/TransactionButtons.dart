@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nuzai_wallet/podo/User.dart';
+import 'package:nuzai_wallet/screens/home/SendTokensPage.dart';
 
 Widget getButtons(BuildContext context, User user) {
   ThemeData themeData = Theme.of(context);
@@ -84,7 +85,12 @@ Widget getButtons(BuildContext context, User user) {
         children: [
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SendTokensPage(user: user,)));
+            },
             icon: Image.asset("assets/icons/send.png"),
           ),
           const Text("Send"),

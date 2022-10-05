@@ -21,6 +21,25 @@ class RestClient {
         body: json.encode({"email": email, "password": password}));
   }
 
+  static Future<Response> register(String email, String password, String fullname) async {
+    return await post(Uri.parse("https://nuzaicore.herokuapp.com/api/v2/users/social_register"),
+        headers: {
+          "accept": "text/plain",
+          "Content-Type": "application/json-patch+json"
+        },
+        body: json.encode({"email": email, "password": password, "fullname": fullname, "socialId": "facebook"}));
+  }
+
+  static Future<Response> sendTokens(String jwt, int id, String to, String amount, String ticker) async {
+    return await post(Uri.parse("https://nuzaicore.herokuapp.com/api/v2/balance/signtransaction/$id"),
+        headers: {
+          "accept": "text/plain",
+          "Content-Type": "application/json-patch+json",
+          'Authorization': 'Bearer $jwt',
+        },
+        body: json.encode({"to": to, "amount": amount, "ticker":ticker}));
+  }
+
   static Future<List<Token>> loadTokens(String jwt, int defaultNetwork, String wallet) async{
     var response = await get(Uri.parse("https://nuzaicore.herokuapp.com/api/v2/balance/tokens/$defaultNetwork/wallet/$wallet"),
         headers: {
@@ -52,5 +71,15 @@ class RestClient {
         });
     Iterable l = json.decode(response.body);
     return List<TokenTransaction>.from(l.map((model) => TokenTransaction.fromJson(model)));
+  }
+
+  static Future<Response> editUser(String jwt, int id, String key, String value) async {
+    return await put(Uri.parse("https://nuzaicore.herokuapp.com/api/v2/users/edit/$id"),
+        headers: {
+          "accept": "text/plain",
+          "Content-Type": "application/json-patch+json",
+          'Authorization': 'Bearer $jwt',
+        },
+        body: json.encode({key: value}));
   }
 }

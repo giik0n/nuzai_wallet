@@ -1,17 +1,25 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:nuzai_wallet/config/LocalAuthApi.dart';
+import 'package:nuzai_wallet/podo/User.dart';
 import 'package:nuzai_wallet/provider/TokenNotifier.dart';
+import 'package:nuzai_wallet/service/RestClient.dart';
+import 'package:nuzai_wallet/widgets/CustomLoader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  final User? user;
+
+  const SettingsPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -30,24 +38,24 @@ class _SettingsPageState extends State<SettingsPage> {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     tokenNotifier = Provider.of<TokenNotifier>(context);
-
-    return Consumer<TokenNotifier>(
-      builder: (context, TokenNotifier notifier, child) => FutureBuilder(
-          future: _getSettings(),
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? Scaffold(
-                    appBar: AppBar(
-                      actions: [
-                        IconButton(
-                            onPressed: () {
-                              tokenNotifier!.setToken("");
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.logout))
-                      ],
-                    ),
-                    body: Padding(
+    User user = widget.user!;
+    return FutureBuilder(
+        future: _getSettings(),
+        builder: (context, snapshot) {
+          return snapshot.hasData
+              ? Scaffold(
+                  appBar: AppBar(
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            tokenNotifier!.setToken("");
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.logout))
+                    ],
+                  ),
+                  body: SingleChildScrollView(
+                    child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -69,13 +77,22 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             ListTile(
-                                onTap: () {},
+                                onTap: () {
+                                  fullnameDialog(
+                                      user, "Enter your full name", "fullname");
+                                },
                                 title: const Text("Change FullName")),
                             ListTile(
-                                onTap: () {},
+                                onTap: () {
+                                  fullnameDialog(
+                                      user, "Enter new email", "email");
+                                },
                                 title: const Text("Change E-mail")),
                             ListTile(
-                                onTap: () {},
+                                onTap: () {
+                                  fullnameDialog(
+                                      user, "Enter new password", "password");
+                                },
                                 title: const Text("Change Password")),
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -87,11 +104,15 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               ),
                             ),
-                            const ListTile(
-                              title: Text("Network"),
-                              trailing: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.black,
+                            GestureDetector(
+                              onTap: () => fullnameDialog(
+                                  user, "Select network", "defaultNetwork"),
+                              child: const ListTile(
+                                title: Text("Network"),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                             avaliableTypes!.contains(BiometricType.face)
@@ -150,14 +171,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             )
                           ],
                         )),
-                  )
-                : const Scaffold(
-                    body: Center(
-                      child: Text("Loading ..."),
-                    ),
-                  );
-          }),
-    );
+                  ),
+                )
+              : const Scaffold(
+                  body: Center(
+                    child: Text("Loading ..."),
+                  ),
+                );
+        });
   }
 
   Future<bool> _getSettings() async {
@@ -169,4 +190,85 @@ class _SettingsPageState extends State<SettingsPage> {
     print(avaliableTypes.toString());
     return true;
   }
+
+  Future fullnameDialog(User user, String hint, String key) => showDialog(
+      context: context,
+      builder: (context) {
+        TextEditingController controller = TextEditingController();
+
+        switch (key) {
+          case "fullname":
+            controller.text = user.fullname!;
+            break;
+          case "email":
+            controller.text = user.email!;
+            break;
+          case "defaultNetwork":
+            controller.text = user.defaultNetwork!.toString();
+            break;
+        }
+
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  keyboardType: key == "defaultNetwork"
+                      ? TextInputType.number
+                      : TextInputType.text,
+                  decoration: InputDecoration(hintText: hint),
+                ),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (controller.text.isNotEmpty) {
+                        showDialog(
+                            // The user CANNOT close this dialog  by pressing outsite it
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) {
+                              return const CustomLoader();
+                            });
+                        Response response = await RestClient.editUser(
+                            user.token!, user.id!, key, controller.text);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(response.statusCode == 200
+                                ? "Changed"
+                                : "Some problem")));
+                        if (response.statusCode == 200) {
+                          FlutterSecureStorage storage = FlutterSecureStorage();
+                          switch (key) {
+                            case "fullname":
+                              user.fullname = controller.text;
+                              storage.write(
+                                  key: "user", value: jsonEncode(user));
+                              break;
+                            case "email":
+                              user.email = controller.text;
+                              storage.write(
+                                  key: "user", value: jsonEncode(user));
+                              break;
+                            case "password":
+                              storage.write(
+                                  key: "password", value: controller.text);
+                              break;
+                            case "defaultNetwork":
+                              user.defaultNetwork = int.parse(controller.text);
+                              storage.write(
+                                  key: "user", value: jsonEncode(user));
+                              break;
+                          }
+                        }
+                      }
+                    },
+                    child: const Text("Submit"))
+              ],
+            ),
+          ),
+        );
+      });
 }

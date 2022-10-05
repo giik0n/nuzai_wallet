@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+                      builder: (context) => SettingsPage(user: user,)));
             },
             icon: const Icon(Icons.settings_outlined),
           ),

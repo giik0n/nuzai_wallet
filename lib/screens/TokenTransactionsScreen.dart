@@ -32,26 +32,26 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) transactions = snapshot.data!;
 
-        if (transactions.isEmpty) {
-          transactions.add(TokenTransaction(
-              id: "1",
-              transactionHash: "vghfbjk",
-              from: "dodik@gmail.com",
-              to: "nuzai.test@gmail.com",
-              amount: "1",
-              transactionTime: "Feb 8 at 7:23 am",
-              status: 0,
-              ticker: token.ticker!));
-          transactions.add(TokenTransaction(
-              id: "1",
-              transactionHash: "vghfbjk",
-              from: "nuzai.test@gmail.com",
-              to: "dodik@gmail.com",
-              amount: "1",
-              transactionTime: "Feb 8 at 7:23 am",
-              status: 0,
-              ticker: token.ticker!));
-        }
+        // if (transactions.isEmpty) {
+        //   transactions.add(TokenTransaction(
+        //       id: "1",
+        //       transactionHash: "vghfbjk",
+        //       from: "dodik@gmail.com",
+        //       to: "nuzai.test@gmail.com",
+        //       amount: "1",
+        //       transactionTime: "Feb 8 at 7:23 am",
+        //       status: 0,
+        //       ticker: token.ticker!));
+        //   transactions.add(TokenTransaction(
+        //       id: "1",
+        //       transactionHash: "vghfbjk",
+        //       from: "nuzai.test@gmail.com",
+        //       to: "dodik@gmail.com",
+        //       amount: "1",
+        //       transactionTime: "Feb 8 at 7:23 am",
+        //       status: 0,
+        //       ticker: token.ticker!));
+        // }
 
         return Scaffold(
           appBar: AppBar(),

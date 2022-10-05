@@ -3,8 +3,8 @@ import 'package:nuzai_wallet/provider/TokenNotifier.dart';
 import 'package:nuzai_wallet/theme/theme_constants.dart';
 import 'package:provider/provider.dart';
 
-import 'auth/join.dart';
-import 'home/MyHomePage.dart';
+import 'screens/auth/join.dart';
+import 'screens/home/MyHomePage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
