@@ -72,8 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                         style: TextStyle(
                                             color: colorScheme.secondary)),
                                     TextSpan(
-                                        text: settingsTitle
-                                            .substring(1, settingsTitle.length)),
+                                        text: settingsTitle.substring(
+                                            1, settingsTitle.length)),
                                   ],
                                 ),
                               ),
@@ -209,6 +209,16 @@ class _SettingsPageState extends State<SettingsPage> {
               children: List.generate(
                 supportedLocales.length,
                 (index) => ListTile(
+                  leading: context.locale == supportedLocales[index]
+                      ? const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      : const SizedBox.shrink(),
+                  onTap: () {
+                    context.setLocale(supportedLocales[index]);
+                    Navigator.of(context).pop();
+                  },
                   title: Text(supportedLocales[index].languageCode.tr()),
                 ),
               ),
