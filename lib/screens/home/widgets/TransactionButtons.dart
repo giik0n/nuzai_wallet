@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nuzai_wallet/podo/User.dart';
@@ -33,13 +34,13 @@ Widget getButtons(BuildContext context, User user) {
                             scale: 1.1,
                           ),
                           Text(
-                            'Receive',
+                            'receive',
                             style: themeData.textTheme.headline5,
-                          ),
+                          ).tr(),
                           Text(
-                            'Scan address to receive payment',
+                            'scanAddressToReceivePayment',
                             style: themeData.textTheme.bodySmall,
-                          ),
+                          ).tr(),
                           FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Row(
@@ -61,6 +62,9 @@ Widget getButtons(BuildContext context, User user) {
                                   onPressed: (() async {
                                     await Clipboard.setData(
                                         ClipboardData(text: user.wallet!));
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(content: const Text('clipboard').tr()));
                                   }),
                                   icon: const Icon(Icons.copy),
                                   color: themeData.colorScheme.secondary
@@ -78,7 +82,10 @@ Widget getButtons(BuildContext context, User user) {
             },
             icon: Image.asset("assets/icons/receive.png"),
           ),
-          const Text("Receive"),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: const Text("receive").tr(),
+          ),
         ],
       ),
       Column(
@@ -93,7 +100,10 @@ Widget getButtons(BuildContext context, User user) {
             },
             icon: Image.asset("assets/icons/send.png"),
           ),
-          const Text("Send"),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: const Text("send").tr(),
+          ),
         ],
       ),
     ],

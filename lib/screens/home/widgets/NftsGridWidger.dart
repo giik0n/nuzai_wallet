@@ -13,24 +13,45 @@ Widget nftGrid(BuildContext context, User user) {
     builder: (context, snapshot) {
       if (snapshot.hasData) tokens = snapshot.data!;
       return tokens.isNotEmpty
-          ? GridView(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 40,
-                crossAxisSpacing: 24,
-                childAspectRatio: 0.75,
-              ),
-              physics: const BouncingScrollPhysics(),
-              children: List.generate(
-                tokens.length,
-                (index) => InkWell(
-                  onTap: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NftPage(nft: tokens[index])));
-                  },
-                  child: Image.network(tokens[index].image!),
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 0.75,
+                ),
+                physics: const BouncingScrollPhysics(),
+                children: List.generate(
+                  tokens.length,
+                  (index) => InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NftPage(nft: tokens[index])));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        height: 250,
+                        width: 150,
+                        tokens[index].image!,
+                        fit: BoxFit.fill,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return const Center(
+                            child: CustomLoader(),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
               ),
             )

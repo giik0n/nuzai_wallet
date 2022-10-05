@@ -42,92 +42,108 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: !isScanned ? _getBiometricLogin() : getScanned(),
-      builder: (context, snapshot) {
-        isBiometricLoginEnabled = snapshot.data ?? false;
-        return isBiometricLoginEnabled
-            ? TextButton(
-                onPressed: () async {
-                  if (await LocalAuthApi.authenticate()) {
-                    FlutterSecureStorage storage = const FlutterSecureStorage();
-                    emailController.text =
-                        await storage.read(key: "email") ?? "";
-                    passController.text =
-                        await storage.read(key: "password") ?? "";
-                    setState(() {
-                      isScanned = true;
-                    });
-                  }
-                },
-                child: const Text("Scan to login"))
-            : Form(
-                key: _form,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        fillColor: const Color.fromRGBO(245, 244, 248, 1),
-                        filled: true,
-                        enabledBorder: inputBorder,
-                        border: inputBorder,
-                        errorBorder: inputBorder,
-                        focusedBorder: inputBorder,
-                        focusedErrorBorder: inputBorder,
-                      ),
-                      validator: (value) {
-                        validator = EmailValidator.validate(value!)
-                            ? null
-                            : "Please enter a valid email.";
-                        return validator;
+    return Consumer<TokenNotifier>(
+      builder: (context, notifier, child) => FutureBuilder(
+        future: !isScanned ? _getBiometricLogin() : Future(() => false),
+        builder: (context, snapshot) {
+          isBiometricLoginEnabled = snapshot.data ?? false;
+          return isBiometricLoginEnabled
+              ? Column(
+                children: [
+                  TextButton(
+                      onPressed: () async {
+                        if (await LocalAuthApi.authenticate()) {
+                          FlutterSecureStorage storage =
+                              const FlutterSecureStorage();
+                          emailController.text =
+                              await storage.read(key: "email") ?? "";
+                          passController.text =
+                              await storage.read(key: "password") ?? "";
+                          await login(notifier);
+                          setState(() {
+                            isScanned = true;
+                          });
+                        }
                       },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      controller: passController,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        fillColor: const Color.fromRGBO(245, 244, 248, 1),
-                        filled: true,
-                        enabledBorder: inputBorder,
-                        border: inputBorder,
-                        errorBorder: inputBorder,
-                        focusedBorder: inputBorder,
-                        focusedErrorBorder: inputBorder,
-                      ),
-                      validator: (value) {
-                        validator = value!.isNotEmpty
-                            ? null
-                            : "Password can't be empty";
-                        return validator;
+                      child: const Text("Scan to login")),
+                  const Text("or"),
+                  TextButton(
+                      onPressed: () async {
+                          setState(() {
+                            isScanned = true;
+                          });
+
                       },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Consumer<TokenNotifier>(
-                      builder: (context, notifier, child) => SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              login(notifier);
-                            },
-                            child: const Text("Sign In"),
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                  ],
-                ),
-              );
-      },
+                      child: const Text("Login manually")),
+
+                ],
+              )
+              : Form(
+                  key: _form,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                          filled: true,
+                          enabledBorder: inputBorder,
+                          border: inputBorder,
+                          errorBorder: inputBorder,
+                          focusedBorder: inputBorder,
+                          focusedErrorBorder: inputBorder,
+                        ),
+                        validator: (value) {
+                          validator = EmailValidator.validate(value!)
+                              ? null
+                              : "Please enter a valid email.";
+                          return validator;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        obscureText: true,
+                        controller: passController,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                          filled: true,
+                          enabledBorder: inputBorder,
+                          border: inputBorder,
+                          errorBorder: inputBorder,
+                          focusedBorder: inputBorder,
+                          focusedErrorBorder: inputBorder,
+                        ),
+                        validator: (value) {
+                          validator = value!.isNotEmpty
+                              ? null
+                              : "Password can't be empty";
+                          return validator;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SizedBox(
+                            width: double.infinity,
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                loginForm(notifier);
+                              },
+                              child: const Text("Sign In"),
+                            )),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ),
+                );
+        },
+      ),
     );
   }
 
@@ -138,33 +154,38 @@ class _LoginFormState extends State<LoginForm> {
     return ((isFaceLogin ?? false) || (isFingerprintLogin ?? false));
   }
 
-  Future<bool> getScanned() async {
-    return false;
+  Future<void> login(TokenNotifier notifier) async {
+    http.Response? response;
+      response =
+          await RestClient.auth(emailController.text, passController.text);
+    checkResponse(response, notifier);
   }
 
-  void login(TokenNotifier notifier) async {
+  Future<void> loginForm(TokenNotifier notifier) async {
     http.Response? response;
     if (_form.currentState!.validate()) {
-      response = await RestClient.auth(emailController.text, passController.text);
+      response =
+      await RestClient.auth(emailController.text, passController.text);
     }
-    if (response != null &&
-        response.statusCode == 200) {
-      User user = User.fromJson(
-          json.decode(response.body)["bodyResponse"]);
-      FlutterSecureStorage storage =
-      const FlutterSecureStorage();
-      storage.write(
-          key: "email", value: emailController.text);
-      storage.write(
-          key: "password",
-          value: passController.text);
-      await storage.write(
-          key: "user", value: jsonEncode(user));
+    if (response != null) {
+      checkResponse(response, notifier);
+    }
+  }
+
+  void checkResponse(http.Response response, TokenNotifier notifier) async {
+
+    if (response.statusCode == 200) {
+      User user = User.fromJson(json.decode(response.body)["bodyResponse"]);
+      FlutterSecureStorage storage = const FlutterSecureStorage();
+      storage.write(key: "email", value: emailController.text);
+      storage.write(key: "password", value: passController.text);
+      await storage.write(key: "user", value: jsonEncode(user));
       notifier.setToken(user.token ?? "");
       emailController.text = "";
       passController.text = "";
     } else {
       print(response?.statusCode);
     }
+
   }
 }

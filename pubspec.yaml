@@ -44,6 +44,7 @@ dependencies:
   visibility_aware_state: ^1.0.5
   local_auth: ^2.1.2
   qr_code_scanner: ^1.0.1
+  easy_localization: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,9 @@ flutter:
      - assets/icons/eye_icon.png
      - assets/icons/sent_transaction.png
      - assets/icons/received_transaction.png
+
+     - assets/translations/en.json
+     - assets/translations/ru.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

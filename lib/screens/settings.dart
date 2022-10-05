@@ -1,8 +1,6 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,6 +26,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   TokenNotifier? tokenNotifier;
   bool? isNews;
+  String? selectedLocale;
   bool? isFaceLogin;
   bool? isFingerprintLogin;
   List<BiometricType>? avaliableTypes;
@@ -39,6 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     tokenNotifier = Provider.of<TokenNotifier>(context);
     User user = widget.user!;
+    String settingsTitle = 'settings'.tr();
     return FutureBuilder(
         future: _getSettings(),
         builder: (context, snapshot) {
@@ -68,44 +68,50 @@ class _SettingsPageState extends State<SettingsPage> {
                                   text: "",
                                   children: [
                                     TextSpan(
-                                        text: "S",
+                                        text: settingsTitle[0].tr(),
                                         style: TextStyle(
                                             color: colorScheme.secondary)),
-                                    const TextSpan(text: "ettings"),
+                                    TextSpan(
+                                        text: settingsTitle
+                                            .substring(1, settingsTitle.length)),
                                   ],
                                 ),
                               ),
                             ),
                             ListTile(
                                 onTap: () {
-                                  fullnameDialog(
-                                      user, "Enter your full name", "fullname");
+                                  changeDialog(user, "changeFullNameHint".tr(),
+                                      "fullname");
                                 },
-                                title: const Text("Change FullName")),
+                                title: Text("changeFullName".tr())),
                             ListTile(
                                 onTap: () {
-                                  fullnameDialog(
-                                      user, "Enter new email", "email");
+                                  changeDialog(
+                                      user, "changeemailHint", "email");
                                 },
-                                title: const Text("Change E-mail")),
+                                title: Text("changeemail".tr())),
                             ListTile(
                                 onTap: () {
-                                  fullnameDialog(
-                                      user, "Enter new password", "password");
+                                  changeDialog(user, "enterNewPassword".tr(),
+                                      "password");
                                 },
-                                title: const Text("Change Password")),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                                title: Text("changepwd".tr())),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: ListTile(
-                                title: Text("Language"),
-                                trailing: Icon(
+                                onTap: () {
+                                  selectLanguageDialog(user);
+                                },
+                                title: Text("language".tr()),
+                                trailing: const Icon(
                                   Icons.info_outlined,
                                   color: Colors.black,
                                 ),
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => fullnameDialog(
+                              onTap: () => changeDialog(
                                   user, "Select network", "defaultNetwork"),
                               child: const ListTile(
                                 title: Text("Network"),
@@ -184,14 +190,36 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<bool> _getSettings() async {
     final prefs = await SharedPreferences.getInstance();
     isNews = prefs.getBool('sendNews');
+    selectedLocale = prefs.getString('selectedLocale');
     isFingerprintLogin = prefs.getBool("isFingerprintLogin");
     isFaceLogin = prefs.getBool("isFaceLogin");
     avaliableTypes = await localAuthApi.getAvailableBiometrics();
-    print(avaliableTypes.toString());
     return true;
   }
 
-  Future fullnameDialog(User user, String hint, String key) => showDialog(
+  Future selectLanguageDialog(User user) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        List<Locale> supportedLocales = context.supportedLocales;
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                supportedLocales.length,
+                (index) => ListTile(
+                  title: Text(supportedLocales[index].languageCode.tr()),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future changeDialog(User user, String hint, String key) => showDialog(
       context: context,
       builder: (context) {
         TextEditingController controller = TextEditingController();
@@ -240,7 +268,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ? "Changed"
                                 : "Some problem")));
                         if (response.statusCode == 200) {
-                          FlutterSecureStorage storage = FlutterSecureStorage();
+                          FlutterSecureStorage storage =
+                              const FlutterSecureStorage();
                           switch (key) {
                             case "fullname":
                               user.fullname = controller.text;

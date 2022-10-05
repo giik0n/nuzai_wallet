@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,9 +16,7 @@ import '../profile.dart';
 import '../settings.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -36,14 +35,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
-        title: Text(widget.title),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SettingsPage(user: user,)));
+                      builder: (context) => SettingsPage(
+                            user: user,
+                          )));
             },
             icon: const Icon(Icons.settings_outlined),
           ),
@@ -71,8 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(child: _tabSection(context, user!)),
                   ],
                 )
-              :  const SizedBox.shrink();
-        }, 
+              : const SizedBox.shrink();
+        },
       ),
     );
   }
@@ -100,9 +100,9 @@ Widget header(
       ],
     ),
     Text(
-      'Wallet address',
+      'walletAddress',
       style: textTheme.subtitle1,
-    ),
+    ).tr(),
     Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: FittedBox(
@@ -119,8 +119,8 @@ Widget header(
               builder: (context, notifier, child) => IconButton(
                 onPressed: (() async {
                   await Clipboard.setData(ClipboardData(text: user.wallet!));
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Copied to your clipboard !')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: const Text('clipboard').tr()));
                 }),
                 icon: const Icon(Icons.copy),
                 color: themeData.colorScheme.secondary.withAlpha(55),
@@ -160,11 +160,11 @@ Widget _tabSection(BuildContext context, User user) {
                 top: BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
-            tabs: const [
+            tabs: [
               Tab(
-                text: "Tokens",
+                text: "tokens".tr(),
               ),
-              Tab(text: "NFT's"),
+              Tab(text: "nfts".tr()),
             ],
           ),
         ),
@@ -184,11 +184,3 @@ Widget _tabSection(BuildContext context, User user) {
     ),
   );
 }
-
-
-
-
-
-
-
-
