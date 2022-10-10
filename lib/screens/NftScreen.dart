@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/podo/NFT.dart';
+import 'package:nuzai_wallet/screens/ar/ArCoreViewScreen.dart';
+import 'package:nuzai_wallet/widgets/CustomLoader.dart';
 
 class NftPage extends StatefulWidget {
   final NFT nft;
@@ -21,7 +24,11 @@ class _NftPageState extends State<NftPage> {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: Theme.of(context).iconTheme,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: SizedBox(
         width: double.infinity,
         child: Padding(
@@ -30,10 +37,22 @@ class _NftPageState extends State<NftPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 300,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
                     child: Image.network(
                       nft.image!,
+                      height: 250,
+                      width: 175,
+                      fit: BoxFit.fill,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return const Center(
+                          child: CustomLoader(),
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -43,7 +62,12 @@ class _NftPageState extends State<NftPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: buttonStyle,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ArCoreViewScreen()),
+                          );
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -53,7 +77,7 @@ class _NftPageState extends State<NftPage> {
                               child: Image.asset("assets/icons/eye_icon.png",
                                   height: 10, width: 16),
                             ),
-                            const Text("See in AR"),
+                            const Text("See in AR", style: TextStyle(color: Colors.white),).tr(),
                           ],
                         ),
                       ),
@@ -65,7 +89,7 @@ class _NftPageState extends State<NftPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: const Color.fromRGBO(245, 244, 248, 1),
+                        color: Theme.of(context).listTileTheme.tileColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Column(
@@ -95,9 +119,10 @@ class _NftPageState extends State<NftPage> {
                         child: SizedBox(
                           height: 60,
                           child: ElevatedButton(
+
                             style: buttonStyle,
                             onPressed: () {},
-                            child: const Text("Send"),
+                            child:  const Text("send", style: TextStyle(color: Colors.white),).tr(),
                           ),
                         ),
                       ),
@@ -108,7 +133,7 @@ class _NftPageState extends State<NftPage> {
                           child: ElevatedButton(
                             style: buttonStyle,
                             onPressed: () {},
-                            child: const Text("Sell"),
+                            child:  const Text("Sell", style: TextStyle(color: Colors.white),).tr(),
                           ),
                         ),
                       ),

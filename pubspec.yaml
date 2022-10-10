@@ -45,6 +45,8 @@ dependencies:
   local_auth: ^2.1.2
   qr_code_scanner: ^1.0.1
   easy_localization: ^3.0.1
+  pin_code_fields: ^7.4.0
+  babylonjs_viewer: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +81,7 @@ flutter:
      - assets/icons/eye_icon.png
      - assets/icons/sent_transaction.png
      - assets/icons/received_transaction.png
+     - assets/icons/settings.png
 
      - assets/translations/en.json
      - assets/translations/ru.json

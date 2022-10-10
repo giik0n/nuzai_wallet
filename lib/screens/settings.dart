@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -39,149 +40,216 @@ class _SettingsPageState extends State<SettingsPage> {
     tokenNotifier = Provider.of<TokenNotifier>(context);
     User user = widget.user!;
     String settingsTitle = 'settings'.tr();
+    Color tileColor = Theme.of(context).listTileTheme.tileColor!;
     return FutureBuilder(
         future: _getSettings(),
         builder: (context, snapshot) {
           return snapshot.hasData
               ? Scaffold(
                   appBar: AppBar(
+                    iconTheme: Theme.of(context).iconTheme,
                     actions: [
                       IconButton(
-                          onPressed: () {
-                            tokenNotifier!.setToken("");
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.logout))
+                        onPressed: () {
+                          tokenNotifier!.setToken("");
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.logout),
+                        color: Theme.of(context).iconTheme.color,
+                      )
                     ],
                   ),
-                  body: SingleChildScrollView(
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: RichText(
-                                text: TextSpan(
-                                  style: textTheme.headline4,
-                                  text: "",
+                  body: Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
+                        gradient: RadialGradient(
+                            radius: 1.5,
+                            center: Alignment.bottomRight,
+                            colors: [
+                              Color.fromRGBO(19, 49, 90, 1),
+                              Color.fromRGBO(8, 26, 52, 1)
+                            ]
+                        )
+                    ): null,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: textTheme.headline4,
+                                    text: "",
+                                    children: [
+                                      TextSpan(
+                                          text: settingsTitle[0].tr(),
+                                          style: TextStyle(
+                                              color: colorScheme.secondary)),
+                                      TextSpan(
+                                          text: settingsTitle.substring(
+                                              1, settingsTitle.length)),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8,),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: tileColor),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    TextSpan(
-                                        text: settingsTitle[0].tr(),
-                                        style: TextStyle(
-                                            color: colorScheme.secondary)),
-                                    TextSpan(
-                                        text: settingsTitle.substring(
-                                            1, settingsTitle.length)),
+                                    ListTile(
+                                      onTap: () {
+                                        changeDialog(
+                                            user,
+                                            "changeFullNameHint".tr(),
+                                            "fullname");
+                                      },
+                                      title: Text("changeFullName".tr()),
+                                      tileColor: Colors.transparent,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 0),
+                                      child: Divider(
+                                        height: 1,
+                                      ),
+                                    ),
+                                    ListTile(
+                                        tileColor: Colors.transparent,
+                                        onTap: () {
+                                          changeDialog(
+                                              user, "changeemailHint", "email");
+                                        },
+                                        title: Text("changeemail".tr())),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 0),
+                                      child: Divider(
+                                        height: 1,
+                                      ),
+                                    ),
+                                    ListTile(
+                                        tileColor: Colors.transparent,
+                                        onTap: () {
+                                          changeDialog(
+                                              user,
+                                              "enterNewPassword".tr(),
+                                              "password");
+                                        },
+                                        title: Text("changepwd".tr())),
                                   ],
                                 ),
                               ),
-                            ),
-                            ListTile(
-                                onTap: () {
-                                  changeDialog(user, "changeFullNameHint".tr(),
-                                      "fullname");
-                                },
-                                title: Text("changeFullName".tr())),
-                            ListTile(
-                                onTap: () {
-                                  changeDialog(
-                                      user, "changeemailHint", "email");
-                                },
-                                title: Text("changeemail".tr())),
-                            ListTile(
-                                onTap: () {
-                                  changeDialog(user, "enterNewPassword".tr(),
-                                      "password");
-                                },
-                                title: Text("changepwd".tr())),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: ListTile(
-                                onTap: () {
-                                  selectLanguageDialog(user);
-                                },
-                                title: Text("language".tr()),
-                                trailing: const Icon(
-                                  Icons.info_outlined,
-                                  color: Colors.black,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      color: tileColor
+                                  ),
+                                  child: ListTile(
+                                    tileColor: tileColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    onTap: () {
+                                      selectLanguageDialog(user);
+                                    },
+                                    title: Text("language".tr()),
+                                    trailing: Icon(Icons.info_outlined,
+                                        color: Theme.of(context).iconTheme.color),
+                                  ),
                                 ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () => changeDialog(
-                                  user, "Select network", "defaultNetwork"),
-                              child: const ListTile(
-                                title: Text("Network"),
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.black,
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: tileColor
                                 ),
-                              ),
-                            ),
-                            avaliableTypes!.contains(BiometricType.face)
-                                ? ListTile(
-                                    title: const Text("Face Login"),
-                                    trailing: CupertinoSwitch(
-                                      onChanged: (isEnabled) async {
-                                        final prefs = await SharedPreferences
-                                            .getInstance();
-                                        await prefs.setBool(
-                                            'isFaceLogin', isEnabled);
-                                        setState(() {});
-                                      },
-                                      value: isFaceLogin ?? false,
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                            avaliableTypes!
-                                        .contains(BiometricType.fingerprint) ||
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                        tileColor: Colors.transparent,
+                                      onTap: () => selectNetworkDialog(user),
+                                      title: const Text("network").tr(),
+                                      trailing: const Icon(Icons.arrow_forward_ios,
+                                          color: Colors.transparent,
+                                    )),
                                     avaliableTypes!
-                                        .contains(BiometricType.strong)
-                                ? ListTile(
-                                    title: const Text("Fingerprint Login"),
-                                    trailing: CupertinoSwitch(
-                                      onChanged: (isEnabled) async {
-                                        if (await LocalAuthApi.authenticate()) {
-                                          final prefs = await SharedPreferences
-                                              .getInstance();
-                                          await prefs.setBool(
-                                              'isFingerprintLogin', isEnabled);
-                                          setState(() {});
-                                        }
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: isEnabled
-                                                    ? const Text(
-                                                        'Fingerprint Login enabled!')
-                                                    : const Text(
-                                                        'Fingerprint Login disabled!')));
-                                      },
-                                      value: isFingerprintLogin ?? false,
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                            ListTile(
-                              title: const Text("Newsletter"),
-                              trailing: CupertinoSwitch(
-                                onChanged: (isNews) async {
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  await prefs.setBool('sendNews', isNews);
-                                  setState(() {});
-                                },
-                                value: snapshot.data ?? false,
+                                        .contains(BiometricType.fingerprint) ||
+                                        avaliableTypes!
+                                            .contains(BiometricType.face) ||
+                                        avaliableTypes!
+                                            .contains(BiometricType.strong)
+                                        ? ListTile(
+                                      tileColor: Colors.transparent,
+                                      title: const Text("fingerprint").tr(),
+                                      trailing: CupertinoSwitch(
+                                        onChanged: (isEnabled) async {
+                                          if (await LocalAuthApi.authenticate()) {
+                                            final prefs = await SharedPreferences
+                                                .getInstance();
+                                            await prefs.setBool(
+                                                'isFingerprintLogin', isEnabled);
+                                            setState(() {});
+                                          }
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                              content: isEnabled
+                                                  ? const Text(
+                                                  'fingerprintEnabled')
+                                                  .tr()
+                                                  : const Text(
+                                                  'fingerprintDisabled')
+                                                  .tr()));
+                                        },
+                                        value: isFingerprintLogin ?? false,
+                                      ),
+                                    )
+                                        : const SizedBox.shrink(),
+                                  ],
+                                ),
                               ),
-                            )
-                          ],
-                        )),
+                              SizedBox(height: 8,),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: tileColor
+                                ),
+                                child: ListTile(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  title: const Text("newsletter").tr(),
+                                  trailing: CupertinoSwitch(
+                                    onChanged: (isNews) async {
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      await prefs.setBool('sendNews', isNews);
+                                      setState(() {});
+                                    },
+                                    value: snapshot.data ?? false,
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
                   ),
                 )
-              : const Scaffold(
+              : Scaffold(
                   body: Center(
-                    child: Text("Loading ..."),
+                    child: const Text("loading").tr(),
                   ),
                 );
         });
@@ -220,6 +288,44 @@ class _SettingsPageState extends State<SettingsPage> {
                     Navigator.of(context).pop();
                   },
                   title: Text(supportedLocales[index].languageCode.tr()),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future selectNetworkDialog(User user) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        Map<String, int> supportedNetworks = HashMap();
+        supportedNetworks.putIfAbsent("BSC TestNet", () => 1);
+        supportedNetworks.putIfAbsent("BSC MainNet", () => 2);
+        FlutterSecureStorage storage = const FlutterSecureStorage();
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                supportedNetworks.length,
+                (index) => ListTile(
+                  leading: user.defaultNetwork ==
+                          supportedNetworks.values.toList()[index]
+                      ? const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      : const SizedBox.shrink(),
+                  onTap: () {
+                    user.defaultNetwork =
+                        (supportedNetworks.values.toList()[index]);
+                    storage.write(key: "user", value: jsonEncode(user));
+                    Navigator.of(context).pop();
+                  },
+                  title: Text(supportedNetworks.keys.toList()[index]),
                 ),
               ),
             ),
@@ -275,8 +381,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(response.statusCode == 200
-                                ? "Changed"
-                                : "Some problem")));
+                                    ? "Success".tr()
+                                    : "Error")
+                                .tr()));
                         if (response.statusCode == 200) {
                           FlutterSecureStorage storage =
                               const FlutterSecureStorage();
@@ -295,16 +402,11 @@ class _SettingsPageState extends State<SettingsPage> {
                               storage.write(
                                   key: "password", value: controller.text);
                               break;
-                            case "defaultNetwork":
-                              user.defaultNetwork = int.parse(controller.text);
-                              storage.write(
-                                  key: "user", value: jsonEncode(user));
-                              break;
                           }
                         }
                       }
                     },
-                    child: const Text("Submit"))
+                    child: const Text("submit").tr())
               ],
             ),
           ),

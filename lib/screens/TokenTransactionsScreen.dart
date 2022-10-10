@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/podo/Token.dart';
 import 'package:nuzai_wallet/podo/TokenTransaction.dart';
@@ -32,29 +33,31 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) transactions = snapshot.data!;
 
-        // if (transactions.isEmpty) {
-        //   transactions.add(TokenTransaction(
-        //       id: "1",
-        //       transactionHash: "vghfbjk",
-        //       from: "dodik@gmail.com",
-        //       to: "nuzai.test@gmail.com",
-        //       amount: "1",
-        //       transactionTime: "Feb 8 at 7:23 am",
-        //       status: 0,
-        //       ticker: token.ticker!));
-        //   transactions.add(TokenTransaction(
-        //       id: "1",
-        //       transactionHash: "vghfbjk",
-        //       from: "nuzai.test@gmail.com",
-        //       to: "dodik@gmail.com",
-        //       amount: "1",
-        //       transactionTime: "Feb 8 at 7:23 am",
-        //       status: 0,
-        //       ticker: token.ticker!));
-        // }
+        if (transactions.isEmpty) {
+          transactions.add(TokenTransaction(
+              id: "1",
+              transactionHash: "vghfbjk",
+              from: "dodik@gmail.com",
+              to: "nuzai.test@gmail.com",
+              amount: "1",
+              transactionTime: "Feb 8 at 7:23 am",
+              status: 0,
+              ticker: token.ticker!));
+          transactions.add(TokenTransaction(
+              id: "1",
+              transactionHash: "vghfbjk",
+              from: "nuzai.test@gmail.com",
+              to: "dodik@gmail.com",
+              amount: "1",
+              transactionTime: "Feb 8 at 7:23 am",
+              status: 0,
+              ticker: token.ticker!));
+        }
 
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            iconTheme: Theme.of(context).iconTheme,
+          ),
           body: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,10 +76,10 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                     ? Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            CustomLoader(),
-                            SizedBox(height: 16),
-                            Text("No transactions yet...")
+                          children: [
+                            const CustomLoader(),
+                            const SizedBox(height: 16),
+                            const Text("noTransactionsYet").tr()
                           ],
                         ),
                       )
@@ -99,16 +102,16 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                                   ListTile(
                                     leading: Image.asset(isReceived
                                         ? "assets/icons/received_transaction.png"
-                                        : "assets/icons/sent_transaction.png"),
+                                        : "assets/icons/sent_transaction.png", color: Theme.of(context).textTheme.bodyText1?.color),
                                     title: Text(
-                                        "${isReceived ? "Received" : "Sent"} ${transaction.ticker!}"),
+                                        "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
                                     subtitle: Text(
                                       transaction.status == 0
                                           ? "Confirmed"
                                           : "Pending",
                                       style:
                                           const TextStyle(color: Colors.green),
-                                    ),
+                                    ).tr(),
                                     trailing: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -120,6 +123,7 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                                         )
                                       ],
                                     ),
+                                      tileColor: Colors.transparent
                                   ),
                                 ],
                               );

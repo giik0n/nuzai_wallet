@@ -32,47 +32,64 @@ class _MyHomePageState extends State<MyHomePage> {
     ThemeData themeData = Theme.of(context);
     FlutterSecureStorage storage = const FlutterSecureStorage();
 
-    return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                            user: user,
-                          )));
-            },
-            icon: const Icon(Icons.settings_outlined),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()));
-            },
-            icon: const Icon(Icons.account_circle_outlined),
-          ),
-        ],
-      ),
-      body: FutureBuilder(
-        future: storage.read(key: "user"),
-        builder: (builder, snapshot) {
-          if (snapshot.data != null) {
-            user = User.fromJson(jsonDecode(snapshot.data!));
-          }
-          return snapshot.hasData
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    header(context, textTheme, colorScheme, themeData, user!),
-                    Expanded(child: _tabSection(context, user!)),
-                  ],
+    return Container(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SettingsPage(
+                              user: user,
+                            )));
+              },
+              icon: Image.asset("assets/icons/settings.png",
+                  scale: 2.5,
+                  color: Theme.of(context).textTheme.bodyText1?.color),
+            ),
+            // IconButton(
+            //   onPressed: () {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => const ProfilePage()));
+            //   },
+            //   icon: const Icon(Icons.account_circle_outlined),
+            // ),
+          ],
+        ),
+        body: FutureBuilder(
+          future: storage.read(key: "user"),
+          builder: (builder, snapshot) {
+            if (snapshot.data != null) {
+              user = User.fromJson(jsonDecode(snapshot.data!));
+            }
+            return snapshot.hasData
+                ? Container(
+              decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
+                  gradient: RadialGradient(
+                      radius: 1.5,
+                      center: Alignment.bottomRight,
+                      colors: [
+                        Color.fromRGBO(19, 49, 90, 1),
+                        Color.fromRGBO(8, 26, 52, 1)
+                      ]
+                  )
+              ): null,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        header(context, textTheme, colorScheme, themeData, user!),
+                        Expanded(child: _tabSection(context, user!)),
+                      ],
+                    ),
                 )
-              : const SizedBox.shrink();
-        },
+                : const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -119,8 +136,8 @@ Widget header(
               builder: (context, notifier, child) => IconButton(
                 onPressed: (() async {
                   await Clipboard.setData(ClipboardData(text: user.wallet!));
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: const Text('clipboard').tr()));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: const Text('clipboard').tr()));
                 }),
                 icon: const Icon(Icons.copy),
                 color: themeData.colorScheme.secondary.withAlpha(55),
@@ -148,11 +165,13 @@ Widget _tabSection(BuildContext context, User user) {
             //This is for background color
             color: Colors.white.withOpacity(0.0),
             //This is for bottom border that is needed
-            border:
-                const Border(top: BorderSide(color: Colors.grey, width: 0.8)),
+            border: Border(
+                top: BorderSide(
+                    color: Theme.of(context).textTheme.bodyText1!.color!,
+                    width: 0.8)),
           ),
           child: TabBar(
-            unselectedLabelColor: Colors.black,
+            unselectedLabelColor: Theme.of(context).textTheme.subtitle2?.color,
             labelColor: Theme.of(context).colorScheme.secondary,
             labelStyle: const TextStyle(fontWeight: FontWeight.normal),
             indicator: BoxDecoration(

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/config/LocalAuthApi.dart';
@@ -30,13 +31,23 @@ class _JoinPageState extends State<JoinPage> {
   @override
   Widget build(BuildContext context) {
 
-    List<Widget> widgets = <Widget>[registerForm(), LoginForm()];
+    List<Widget> widgets = <Widget>[const RegisterForm(), const LoginForm()];
 
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
+        child: Container(
+          decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
+            gradient: RadialGradient(
+              radius: 2,
+              center: Alignment.topLeft,
+              colors: [
+                Color.fromRGBO(9, 35, 72, 0.5),
+                Color.fromRGBO(2, 14, 33, 1)
+              ]
+            )
+          ): null,
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -81,8 +92,7 @@ class _JoinPageState extends State<JoinPage> {
                                   Expanded(
                                     child: CupertinoButton(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: const Color.fromRGBO(
-                                            245, 244, 248, 1),
+                                        color: Theme.of(context).listTileTheme.tileColor,
                                         child: Center(
                                           child: Image.asset(
                                             'assets/icons/google.png',
@@ -95,8 +105,7 @@ class _JoinPageState extends State<JoinPage> {
                                   Expanded(
                                     child: CupertinoButton(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: const Color.fromRGBO(
-                                            245, 244, 248, 1),
+                                        color: Theme.of(context).listTileTheme.tileColor,
                                         child: Center(
                                           child: Image.asset(
                                             'assets/icons/facebook.png',
@@ -119,10 +128,10 @@ class _JoinPageState extends State<JoinPage> {
                                   color: const Color.fromRGBO(23, 25, 46, 0.1),
                                   height: 1,
                                 )),
-                                const Padding(
+                                Padding(
                                   padding:
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: Text("or"),
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                                  child: const Text("or").tr(),
                                 ),
                                 Expanded(
                                     child: Container(
@@ -138,7 +147,7 @@ class _JoinPageState extends State<JoinPage> {
                               selectedWidget != 1
                                   ? "Already have account?"
                                   : "Don't have an account yet?",
-                            ),
+                            ).tr(),
                             TextButton(
                               style: ButtonStyle(
                                 overlayColor:
@@ -150,9 +159,9 @@ class _JoinPageState extends State<JoinPage> {
                                 });
                               },
                               child: Text(
-                                selectedWidget != 1 ? "Sing in" : "Sing up",
-                                style: TextStyle(color: Colors.blue),
-                              ),
+                                selectedWidget != 1 ? "Sign in" : "Sign up",
+                                style: const TextStyle(color: Colors.blue),
+                              ).tr(),
                             )
                           ],
                         ),
@@ -169,15 +178,15 @@ class _JoinPageState extends State<JoinPage> {
                     style: textTheme.bodySmall,
                     text: "",
                     children: [
-                      const TextSpan(text: "By signing up, you agree to "),
+                      TextSpan(text: "By signing up, you agree to ".tr()),
                       TextSpan(
-                          text: "Terms of Serice ",
+                          text: "Terms of Service ".tr(),
                           style: TextStyle(color: colorScheme.secondary)),
-                      const TextSpan(text: "and confirm that our "),
+                      TextSpan(text: "and confirm that our ".tr()),
                       TextSpan(
-                          text: "Privacy Policy ",
+                          text: "Privacy Policy ".tr(),
                           style: TextStyle(color: colorScheme.secondary)),
-                      const TextSpan(text: "applies to you"),
+                      TextSpan(text: "applies to you".tr()),
                     ],
                   ),
                 ),

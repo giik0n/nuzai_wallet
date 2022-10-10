@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const COLOR_ACCENT = Color.fromARGB(255, 55, 135, 254);
 
 ThemeData lightTheme = ThemeData(
-  buttonTheme: ButtonThemeData(
+  buttonTheme: const ButtonThemeData(
     textTheme: ButtonTextTheme.accent
   ),
 
@@ -21,7 +21,7 @@ ThemeData lightTheme = ThemeData(
           backgroundColor: MaterialStateProperty.all<Color>(COLOR_ACCENT)),
     ),
     appBarTheme: const AppBarTheme(
-      color: Colors.white,
+      color: Colors.transparent,
       elevation: 0,
       actionsIconTheme: IconThemeData(
         color: Color.fromRGBO(40, 40, 40, 1),
@@ -30,10 +30,28 @@ ThemeData lightTheme = ThemeData(
         color: Color.fromRGBO(40, 40, 40, 1),
       ),
     ),
+    listTileTheme: const ListTileThemeData(
+      tileColor: Color.fromRGBO(245, 244, 248, 1)
+    ),
     scaffoldBackgroundColor: Colors.white);
 
 ThemeData darkTheme = ThemeData(
-  colorScheme: const ColorScheme.light(
+  
+  scaffoldBackgroundColor: Color.fromRGBO(8, 26, 52, 1),
+  appBarTheme: const AppBarTheme(
+    color: Colors.transparent,
+    elevation: 0,
+    actionsIconTheme: IconThemeData(
+      color: Color.fromRGBO(40, 40, 40, 1),
+    ),
+    iconTheme: IconThemeData(
+      color: Color.fromRGBO(40, 40, 40, 1),
+    ),
+  ),
+  listTileTheme: const ListTileThemeData(
+      tileColor: Color.fromRGBO(28, 46, 80, 1)
+  ),
+  colorScheme: const ColorScheme.dark(
     secondary: COLOR_ACCENT,
     brightness: Brightness.dark,
   ),

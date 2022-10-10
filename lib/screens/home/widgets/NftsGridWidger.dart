@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/podo/NFT.dart';
 import 'package:nuzai_wallet/podo/User.dart';
@@ -37,7 +38,7 @@ Widget nftGrid(BuildContext context, User user) {
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
                         height: 250,
-                        width: 150,
+                        width: 175,
                         tokens[index].image!,
                         fit: BoxFit.fill,
                         loadingBuilder: (BuildContext context, Widget child,
@@ -57,10 +58,10 @@ Widget nftGrid(BuildContext context, User user) {
             )
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CustomLoader(),
-                SizedBox(height: 16),
-                Text("Loading..."),
+              children:  [
+                const CustomLoader(),
+                const SizedBox(height: 16),
+                const Text("loading").tr(),
               ],
             );
     },

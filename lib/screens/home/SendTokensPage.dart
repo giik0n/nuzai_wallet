@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
@@ -41,31 +42,34 @@ class _SendTokensPageState extends State<SendTokensPage> {
         return snapshot.hasData
             ? Scaffold(
                 appBar: AppBar(
-                    title: const Text("Send tokens"),
+                  iconTheme: Theme.of(context).iconTheme,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: const Text("sendTokens").tr(),
                     titleTextStyle: _themeData.textTheme.headline5),
                 body: Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
                           children: [
                             Text(
-                              "To: ",
+                              "to",
                               style: _themeData.textTheme.headline5
                                   ?.copyWith(color: Colors.blue),
-                            ),
+                            ).tr(),
                             Expanded(
                                 child: TextFormField(
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter some wallet address';
+                                  return "walletEmptyError".tr();
                                 }
                                 return null;
                               },
-                              decoration: const InputDecoration(
-                                  hintText: "Wallet address",
+                              decoration: InputDecoration(
+                                  hintText: "walletAddress".tr(),
                                   border: InputBorder.none),
                               controller: walletAddressController,
                             )),
@@ -81,15 +85,18 @@ class _SendTokensPageState extends State<SendTokensPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         child: DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            border: InputBorder.none
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'No selected token';
+                              return "noSelectedToken".tr();
                             }
                             return null;
                           },
-                          hint: const Text("Select token"),
+                          hint: const Text("selectToken").tr(),
                           value: selectedToken,
                           items: getDropdownItems(tokens),
                           onChanged: (String? newValue) {
@@ -100,21 +107,25 @@ class _SendTokensPageState extends State<SendTokensPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text("Amount: "),
+                            const Text("amount").tr(),
                             Expanded(
                                 child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
                               child: TextFormField(
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  hintText: "0.0000123"
+                                ),
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
                                       double.parse(value) <= 0) {
-                                    return 'Please enter some amount';
+                                    return "pleaseEnterSomeAmount".tr();
                                   }
 
                                   // if (selectedToken != null &&
@@ -124,7 +135,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                   //                 element.ticker ==
                                   //                 selectedToken!)
                                   //             .balance!))
-                                  //   return 'Don\'t have such amount';
+                                  //   return "dontHaveSuchAmount".tr();
                                   return null;
                                 },
                                 controller: amountController,
@@ -138,7 +149,9 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                       final text = newValue.text;
                                       if (text.isNotEmpty) double.parse(text);
                                       return newValue;
-                                    } catch (e) {}
+                                    } catch (e) {
+                                      print(e);
+                                    }
                                     return oldValue;
                                   }),
                                 ],
@@ -160,9 +173,9 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        Text("Estimated gas fee"),
-                                        Text(
+                                      children: [
+                                        Text("estimatedGasFee".tr()),
+                                        const Text(
                                           "0.0000032 BNB",
                                           style: TextStyle(color: Colors.blue),
                                         )
@@ -172,7 +185,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Text("Total"),
+                                        const Text("total").tr(),
                                         Text(
                                           "${amountController.text} ${selectedToken!} +  0.0000032 BNB",
                                           style: const TextStyle(
@@ -189,11 +202,10 @@ class _SendTokensPageState extends State<SendTokensPage> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               showDialog(
-                                  // The user CANNOT close this dialog  by pressing outsite it
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (_) {
-                                    return CustomLoader();
+                                    return const CustomLoader();
                                   });
                               Response response = await RestClient.sendTokens(
                                   widget.user.token!,
@@ -204,11 +216,11 @@ class _SendTokensPageState extends State<SendTokensPage> {
                               Navigator.of(context).pop();
                               ScaffoldMessenger.of(context).showSnackBar(
                                   getSnackBar(response.statusCode == 200
-                                      ? "Sent"
-                                      : "Error"));
+                                      ? "Sent".tr()
+                                      : "Error".tr()));
                             }
                           },
-                          child: const Text("Send"))
+                          child: const Text("send").tr())
                     ],
                   ),
                 ),

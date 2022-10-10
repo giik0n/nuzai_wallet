@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/widgets/CustomLoader.dart';
 
@@ -9,17 +10,17 @@ Widget emptyList(String type, BuildContext context) {
     children: [
       const CustomLoader(),
       const SizedBox(height: 24),
-      Text("No $type yet"),
-      Text("Learn more",
-          style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
+      Text(type == "NFTs" ? "noNFTsYet": "noTokensYet").tr(),
+      Text("learnMore",
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary)).tr(),
       const SizedBox(height: 24),
       type == "NFTs"
           ? Column(
         children: [
-          Text("Don't see your $type?"),
-          Text("Import NFTs",
+          const Text("dontSeeNFTS").tr(),
+          Text("importNFT",
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary))
+                  color: Theme.of(context).colorScheme.secondary)).tr()
         ],
       )
           : const SizedBox.shrink(),

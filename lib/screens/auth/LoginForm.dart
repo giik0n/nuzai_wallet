@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
@@ -65,8 +66,8 @@ class _LoginFormState extends State<LoginForm> {
                           });
                         }
                       },
-                      child: const Text("Scan to login")),
-                  const Text("or"),
+                      child: const Text("Scan to login").tr()),
+                  const Text("or").tr(),
                   TextButton(
                       onPressed: () async {
                           setState(() {
@@ -74,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                           });
 
                       },
-                      child: const Text("Login manually")),
+                      child: const Text("Login manually").tr()),
 
                 ],
               )
@@ -85,8 +86,7 @@ class _LoginFormState extends State<LoginForm> {
                       TextFormField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          hintText: 'Email',
-                          fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                          hintText: "Email".tr(),
                           filled: true,
                           enabledBorder: inputBorder,
                           border: inputBorder,
@@ -97,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
                         validator: (value) {
                           validator = EmailValidator.validate(value!)
                               ? null
-                              : "Please enter a valid email.";
+                              : "Please enter a valid email.".tr();
                           return validator;
                         },
                       ),
@@ -108,8 +108,7 @@ class _LoginFormState extends State<LoginForm> {
                         obscureText: true,
                         controller: passController,
                         decoration: InputDecoration(
-                          hintText: 'Password',
-                          fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                          hintText: "Password".tr(),
                           filled: true,
                           enabledBorder: inputBorder,
                           border: inputBorder,
@@ -120,7 +119,7 @@ class _LoginFormState extends State<LoginForm> {
                         validator: (value) {
                           validator = value!.isNotEmpty
                               ? null
-                              : "Password can't be empty";
+                              : "Password can't be empty".tr();
                           return validator;
                         },
                       ),
@@ -134,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
                               onPressed: () async {
                                 loginForm(notifier);
                               },
-                              child: const Text("Sign In"),
+                              child: const Text("Sign in").tr(),
                             )),
                       const SizedBox(
                         height: 8,
@@ -184,7 +183,7 @@ class _LoginFormState extends State<LoginForm> {
       emailController.text = "";
       passController.text = "";
     } else {
-      print(response?.statusCode);
+      print(response.statusCode);
     }
 
   }
