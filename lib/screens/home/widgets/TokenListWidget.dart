@@ -64,7 +64,13 @@ Widget tokensList(BuildContext context, User user) {
                             ),
                             title: Text(tokens[index].ticker!),
                             subtitle: Text(tokens[index].name!),
-                            trailing: Text(tokens[index].balance!),
+                            trailing: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(tokens[index].balance!),
+                                Text(double.parse(tokens[index].amountInUsd!).toStringAsFixed(2), style: Theme.of(context).textTheme.subtitle1,),
+                              ],
+                            ),
                           ),
                               ),
                             //     Container(

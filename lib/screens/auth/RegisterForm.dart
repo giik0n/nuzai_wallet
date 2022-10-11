@@ -97,7 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           print(response?.statusCode);
                         }
                       },
-                      child: const Text("Sign Up").tr(),
+                      child: const Text("Sign up", style: TextStyle(color: Colors.white)).tr(),
                     ))),
             const SizedBox(
               height: 8,
@@ -111,6 +111,7 @@ class _RegisterFormState extends State<RegisterForm> {
         child: Column(
           children: [
             PinCodeTextField(
+              autoDisposeControllers: false,
               keyboardType: TextInputType.number,
               length: 6,
               obscureText: false,
@@ -120,6 +121,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 borderRadius: BorderRadius.circular(5),
                 fieldHeight: 50,
                 fieldWidth: 40,
+                inactiveFillColor: Colors.transparent,
+                inactiveColor: Colors.grey,
                 activeFillColor:
                     Theme.of(context).inputDecorationTheme.fillColor,
               ),
@@ -127,11 +130,11 @@ class _RegisterFormState extends State<RegisterForm> {
               backgroundColor: Colors.transparent,
               enableActiveFill: true,
               controller: codeController,
-              onCompleted: (v) {
-                codeController.text = v;
+              onCompleted: (value) {
+                codeController.text = value;
               },
               onChanged: (value) {
-                print(value);
+
               },
               appContext: context,
 
@@ -173,7 +176,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           print(response?.statusCode);
                         }
                       },
-                      child: const Text("Sign Up").tr(),
+                      child: const Text("next", style: TextStyle(color: Colors.white)).tr(),
                     ))),
             const SizedBox(
               height: 8,
@@ -295,7 +298,7 @@ Form registerFieldsForm() => Form(
                         print(response?.statusCode);
                       }
                     },
-                    child: const Text("Sign Up").tr(),
+                    child: const Text("btnRegister", style: TextStyle(color: Colors.white)).tr(),
                   ))),
           const SizedBox(
             height: 8,

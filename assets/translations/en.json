@@ -67,8 +67,8 @@
   "or" : "or",
   "Already have account?" : "Already have account?",
   "Don't have an account yet?" : "Don't have an account yet?",
-  "Sign in" : "Sing in",
-  "Sign up" : "Sing up",
+  "Sign in" : "Sign in",
+  "Sign up" : "Sign up",
   "By signing up, you agree to " : "By signing up, you agree to ",
   "Terms of Service " : "Terms of Service ",
   "and confirm that our ": "and confirm that our ",
@@ -84,7 +84,6 @@
   "Fullname" : "Fullname",
   "Name can't be empty" : "Name can't be empty",
   "Repeat password": "Repeat password",
-  "Not match" : "Not match"
-
-
+  "Not match" : "Not match",
+  "next": "Next"
 }

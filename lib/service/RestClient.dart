@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:nuzai_wallet/podo/GasFee.dart';
 import 'package:nuzai_wallet/podo/TokenTransaction.dart';
 
 import '../podo/NFT.dart';
@@ -74,6 +75,15 @@ class RestClient {
         });
     Iterable l = json.decode(response.body);
     return List<Token>.from(l.map((model) => Token.fromJson(model)));
+  }
+
+  static Future<GasFee> getGasFee() async{
+    var response = await get(Uri.parse("https://api.nuzai.network/api/v2/balance/getgasfee"),
+        headers: {
+          "accept": "text/plain",
+          "Content-Type": "application/json-patch+json",
+        });
+    return GasFee.fromJson(jsonDecode(response.body));
   }
 
   static Future<List<NFT>> loadNFTs(String jwt,String wallet) async{

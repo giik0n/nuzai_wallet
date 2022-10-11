@@ -8,6 +8,8 @@ import 'package:nuzai_wallet/screens/home/widgets/QrScanner.dart';
 import 'package:nuzai_wallet/service/RestClient.dart';
 import 'package:nuzai_wallet/widgets/CustomLoader.dart';
 
+import '../../podo/GasFee.dart';
+
 class SendTokensPage extends StatefulWidget {
   final User user;
 
@@ -26,19 +28,15 @@ class _SendTokensPageState extends State<SendTokensPage> {
   String? selectedToken;
 
   List<Token> tokens = [];
+  GasFee gasFee = GasFee();
+  double totalGasFee = 0;
 
   @override
   Widget build(BuildContext context) {
     ThemeData _themeData = Theme.of(context);
     return FutureBuilder(
-      future: RestClient.loadTokens(
-          widget.user.token!, widget.user.defaultNetwork!, widget.user.wallet!),
+      future: loadFutures(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          tokens = snapshot.data!;
-          // selectedToken ??= getDropdownItems(tokens)[0].value!;
-        }
-
         return snapshot.hasData
             ? Scaffold(
                 appBar: AppBar(
@@ -175,8 +173,8 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text("estimatedGasFee".tr()),
-                                        const Text(
-                                          "0.0000032 BNB",
+                                         Text(
+                                          "$totalGasFee BNB",
                                           style: TextStyle(color: Colors.blue),
                                         )
                                       ],
@@ -187,7 +185,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                       children: [
                                         const Text("total").tr(),
                                         Text(
-                                          "${amountController.text} ${selectedToken!} +  0.0000032 BNB",
+                                          "${amountController.text} ${selectedToken!} +  $totalGasFee BNB",
                                           style: const TextStyle(
                                               color: Colors.blue),
                                         )
@@ -238,6 +236,13 @@ class _SendTokensPageState extends State<SendTokensPage> {
       MaterialPageRoute(builder: (context) => const QrScanner()),
     );
     return result;
+  }
+  Future<bool> loadFutures() async {
+    tokens = await RestClient.loadTokens(
+        widget.user.token!, widget.user.defaultNetwork!, widget.user.wallet!);
+    gasFee = await RestClient.getGasFee();
+    totalGasFee = gasFee.gasPrice! * gasFee.gasLimit! / 1000000000;
+    return true;
   }
 
   getSnackBar(String msg) => SnackBar(

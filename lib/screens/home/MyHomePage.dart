@@ -116,6 +116,13 @@ Widget header(
         Text(surnameRest, style: const TextStyle(fontSize: 36)),
       ],
     ),
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(user.totalAmount??"0.00",),
+        const Text("\$",),
+      ],
+    ),
     Text(
       'walletAddress',
       style: textTheme.subtitle1,

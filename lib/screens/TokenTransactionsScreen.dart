@@ -69,7 +69,7 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                   "${token.balance!} ${token.ticker!}",
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                Text("cash value", style: themeData.textTheme.bodySmall),
+                Text(token.amountInUsd!, style: themeData.textTheme.bodySmall),
                 const SizedBox(height: 16),
                 getButtons(context, user),
                 transactions.isEmpty

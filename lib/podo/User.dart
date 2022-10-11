@@ -4,6 +4,7 @@ class User {
   String? email;
   String? token;
   String? wallet;
+  String? totalAmount;
   int? defaultNetwork;
 
   User(
@@ -12,6 +13,7 @@ class User {
       this.email,
       this.token,
       this.wallet,
+      this.totalAmount,
       this.defaultNetwork});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class User {
     email = json['email'];
     token = json['token'];
     wallet = json['wallet'];
+    totalAmount = json['totalAmount'];
     defaultNetwork = json['defaultNetwork'];
   }
 
@@ -30,6 +33,7 @@ class User {
     data['email'] = this.email;
     data['token'] = this.token;
     data['wallet'] = this.wallet;
+    data['totalAmount'] = this.totalAmount;
     data['defaultNetwork'] = this.defaultNetwork;
     return data;
   }
