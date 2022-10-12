@@ -42,7 +42,7 @@
   "language" : "Language",
   "network" : "Network",
   "newsletter" : "Newsletter",
-  "fingerprint" : "Fingerprint/FaceID Login",
+  "fingerprint" : "Fingerprint/FaceID",
   "sendTokens" : "Send tokens",
   "to" : "To: ",
   "selectToken" : "Select token",
