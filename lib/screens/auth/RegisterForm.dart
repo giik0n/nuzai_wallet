@@ -139,20 +139,6 @@ class _RegisterFormState extends State<RegisterForm> {
               appContext: context,
 
             ),
-            // TextFormField(
-            //   controller: codeController,
-            //   decoration: InputDecoration(
-            //     hintText: "code".tr(),
-            //     filled: true,
-            //     enabledBorder: inputBorder,
-            //     border: inputBorder,
-            //     errorBorder: inputBorder,
-            //     focusedBorder: inputBorder,
-            //     focusedErrorBorder: inputBorder,
-            //   ),
-            //   validator: (value) =>
-            //   value!.isNotEmpty ? null : "Please enter a valid code.".tr(),
-            // ),
             const SizedBox(
               height: 8,
             ),

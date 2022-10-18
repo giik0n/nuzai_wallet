@@ -1,6 +1,8 @@
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:nuzai_wallet/provider/TokenNotifier.dart';
+import 'package:nuzai_wallet/screens/ar/ArCoreViewScreen.dart';
 import 'package:nuzai_wallet/theme/theme_constants.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +12,10 @@ import 'screens/home/MyHomePage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  print('ARCORE IS AVAILABLE?');
+  print(await ArCoreController.checkArCoreAvailability());
+  print('\nAR SERVICES INSTALLED?');
+  print(await ArCoreController.checkIsArCoreInstalled());
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('ru')],
     path: 'assets/translations',
@@ -50,7 +56,7 @@ class MyApp extends StatelessWidget {
       builder: (context, TokenNotifier notifier, child) {
         return notifier.token.isNotEmpty
             ? const MyHomePage()
-            : const JoinPage();
+            : const ArCoreViewScreen();
       },
     );
   }
