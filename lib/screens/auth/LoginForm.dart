@@ -51,35 +51,35 @@ class _LoginFormState extends State<LoginForm> {
           isBiometricLoginEnabled = snapshot.data ?? false;
           return isBiometricLoginEnabled
               ? Column(
-                children: [
-                  TextButton(
-                      onPressed: () async {
-                        if (await LocalAuthApi.authenticate()) {
-                          FlutterSecureStorage storage =
-                              const FlutterSecureStorage();
-                          emailController.text =
-                              await storage.read(key: "email") ?? "";
-                          passController.text =
-                              await storage.read(key: "password") ?? "";
-                          await login(notifier);
+                  children: [
+                    TextButton(
+                        onPressed: () async {
+                          if (await LocalAuthApi.authenticate()) {
+                            FlutterSecureStorage storage =
+                                const FlutterSecureStorage();
+                            emailController.text =
+                                await storage.read(key: "email") ?? "";
+                            passController.text =
+                                await storage.read(key: "password") ?? "";
+                            await login(notifier);
+                            if (mounted) {
+                              setState(() {
+                                isScanned = true;
+                              });
+                            }
+                          }
+                        },
+                        child: const Text("Scan to login").tr()),
+                    const Text("or").tr(),
+                    TextButton(
+                        onPressed: () async {
                           setState(() {
                             isScanned = true;
                           });
-                        }
-                      },
-                      child: const Text("Scan to login").tr()),
-                  const Text("or").tr(),
-                  TextButton(
-                      onPressed: () async {
-                          setState(() {
-                            isScanned = true;
-                          });
-
-                      },
-                      child: const Text("Login manually").tr()),
-
-                ],
-              )
+                        },
+                        child: const Text("Login manually").tr()),
+                  ],
+                )
               : Form(
                   key: _form,
                   child: Column(
@@ -128,14 +128,14 @@ class _LoginFormState extends State<LoginForm> {
                         height: 8,
                       ),
                       SizedBox(
-                            width: double.infinity,
-                            height: 48,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                loginForm(notifier);
-                              },
-                              child: const Text("Sign in").tr(),
-                            )),
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              loginForm(notifier);
+                            },
+                            child: const Text("Sign in").tr(),
+                          )),
                       const SizedBox(
                         height: 8,
                       ),
@@ -156,14 +156,13 @@ class _LoginFormState extends State<LoginForm> {
 
   Future<void> login(TokenNotifier notifier) async {
     http.Response? response;
-      response =
-          await RestClient.auth(emailController.text, passController.text);
+    response = await RestClient.auth(emailController.text, passController.text);
     checkResponse(response, notifier);
   }
 
   Future<void> loginForm(TokenNotifier notifier) async {
     showDialog(
-      // The user CANNOT close this dialog  by pressing outsite it
+        // The user CANNOT close this dialog  by pressing outsite it
         barrierDismissible: false,
         context: context,
         builder: (_) {
@@ -172,7 +171,7 @@ class _LoginFormState extends State<LoginForm> {
     http.Response? response;
     if (_form.currentState!.validate()) {
       response =
-      await RestClient.auth(emailController.text, passController.text);
+          await RestClient.auth(emailController.text, passController.text);
     }
     if (response != null) {
       checkResponse(response, notifier);
@@ -181,7 +180,6 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void checkResponse(http.Response response, TokenNotifier notifier) async {
-
     if (response.statusCode == 200) {
       User user = User.fromJson(json.decode(response.body)["bodyResponse"]);
       FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -194,6 +192,5 @@ class _LoginFormState extends State<LoginForm> {
     } else {
       print(response.statusCode);
     }
-
   }
 }

@@ -205,7 +205,7 @@ Form registerFieldsForm() => Form(
               focusedErrorBorder: inputBorder,
             ),
             validator: (value) =>
-                value!.isNotEmpty ? value!.contains(" ")? null : "changeFullNameHint".tr() : "Name can't be empty".tr(),
+                value!.isNotEmpty ? value.contains(" ")? null : "changeFullNameHint".tr() : "Name can't be empty".tr(),
           ),
           const SizedBox(
             height: 8,

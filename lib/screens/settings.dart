@@ -257,7 +257,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<bool> _getSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    isNews = prefs.getBool('sendNews');
+    isNews = prefs.getBool('sendNews')??false;
     selectedLocale = prefs.getString('selectedLocale');
     isFingerprintLogin = prefs.getBool("isFingerprintLogin");
     isFaceLogin = prefs.getBool("isFaceLogin");

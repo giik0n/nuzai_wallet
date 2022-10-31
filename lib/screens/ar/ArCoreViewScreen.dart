@@ -3,7 +3,6 @@ import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
-import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
@@ -11,9 +10,7 @@ import 'package:ar_flutter_plugin/datatypes/node_types.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
-import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math_64.dart';
-import 'dart:math';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ArCoreViewScreen extends StatefulWidget {
   String? ipfsUrl;
@@ -24,7 +21,6 @@ class ArCoreViewScreen extends StatefulWidget {
 }
 
 class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
-
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
@@ -35,7 +31,11 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        iconTheme: Theme.of(context).iconTheme,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body:
           // BabylonJSViewer(
           //   src: 'https://models.babylonjs.com/boombox.glb',
@@ -68,7 +68,6 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     this.arObjectManager?.onNodeTap = onNodeTapped;
   }
 
-
   Future<void> onNodeTapped(List<String> nodes) async {
     var number = nodes.length;
     this.arSessionManager?.onError("Tapped $number node(s)");
@@ -93,13 +92,13 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
-            uri:widget.ipfsUrl??
+            uri: widget.ipfsUrl ??
                 "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            scale: Vector3(0.2, 0.2, 0.2),
-            position: Vector3(0.0, 0.0, 0.0),
-            rotation: Vector4(1.0, 0.0, 0.0, 0.0));
-        bool? didAddNodeToAnchor = await arObjectManager
-            ?.addNode(newNode, planeAnchor: newAnchor);
+            scale: vector.Vector3(0.2, 0.2, 0.2),
+            position: vector.Vector3(0.0, 0.0, 0.0),
+            rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
+        bool? didAddNodeToAnchor =
+            await arObjectManager?.addNode(newNode, planeAnchor: newAnchor);
         if (didAddNodeToAnchor!) {
           nodes.add(newNode);
         } else {

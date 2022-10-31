@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             )));
                 String? userStr = await storage.read(key: "user");
                 user = User.fromJson(jsonDecode(userStr!));
-                setState(() {
-
-                });
+                if (mounted) {
+                  setState(() {});
+                }
               },
               icon: Image.asset("assets/icons/settings.png",
                   scale: 2.5,
@@ -66,25 +66,26 @@ class _MyHomePageState extends State<MyHomePage> {
             }
             return snapshot.hasData
                 ? Container(
-              decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
-                  gradient: RadialGradient(
-                      radius: 1.5,
-                      center: Alignment.bottomRight,
-                      colors: [
-                        Color.fromRGBO(19, 49, 90, 1),
-                        Color.fromRGBO(8, 26, 52, 1)
-                      ]
-                  )
-              ): null,
-                  child: Column(
+                    decoration: Theme.of(context).brightness == Brightness.dark
+                        ? const BoxDecoration(
+                            gradient: RadialGradient(
+                                radius: 1.5,
+                                center: Alignment.bottomRight,
+                                colors: [
+                                Color.fromRGBO(19, 49, 90, 1),
+                                Color.fromRGBO(8, 26, 52, 1)
+                              ]))
+                        : null,
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        header(context, textTheme, colorScheme, themeData, user!),
+                        header(
+                            context, textTheme, colorScheme, themeData, user!),
                         Expanded(child: _tabSection(context, user!)),
                       ],
                     ),
-                )
+                  )
                 : const SizedBox.shrink();
           },
         ),
@@ -117,8 +118,12 @@ Widget header(
     Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(user.totalAmount??"0.00",),
-        const Text("\$",),
+        Text(
+          user.totalAmount ?? "0.00",
+        ),
+        const Text(
+          "\$",
+        ),
       ],
     ),
     Text(
