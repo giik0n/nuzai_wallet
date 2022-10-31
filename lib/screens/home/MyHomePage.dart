@@ -39,25 +39,23 @@ class _MyHomePageState extends State<MyHomePage> {
           elevation: 0,
           actions: [
             IconButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => SettingsPage(
                               user: user,
                             )));
+                String? userStr = await storage.read(key: "user");
+                user = User.fromJson(jsonDecode(userStr!));
+                setState(() {
+
+                });
               },
               icon: Image.asset("assets/icons/settings.png",
                   scale: 2.5,
                   color: Theme.of(context).textTheme.bodyText1?.color),
             ),
-            // IconButton(
-            //   onPressed: () {
-            //     Navigator.push(context,
-            //         MaterialPageRoute(builder: (context) => const ProfilePage()));
-            //   },
-            //   icon: const Icon(Icons.account_circle_outlined),
-            // ),
           ],
         ),
         body: FutureBuilder(

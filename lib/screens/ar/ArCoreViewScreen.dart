@@ -16,14 +16,14 @@ import 'package:vector_math/vector_math_64.dart';
 import 'dart:math';
 
 class ArCoreViewScreen extends StatefulWidget {
-  const ArCoreViewScreen({Key? key}) : super(key: key);
+  String? ipfsUrl;
+  ArCoreViewScreen(this.ipfsUrl, {Key? key}) : super(key: key);
 
   @override
   State<ArCoreViewScreen> createState() => _ArCoreViewScreenState();
 }
 
 class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
-  ArCoreController? arCoreController;
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
@@ -39,13 +39,6 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
       body:
           // BabylonJSViewer(
           //   src: 'https://models.babylonjs.com/boombox.glb',
-          // ),
-          //     ArCoreView(
-          //   enableTapRecognizer: true,
-          //   onArCoreViewCreated: (ArCoreController _arCoreController) {
-          //     arCoreController = _arCoreController;
-          //     arCoreController?.onPlaneTap = _handleOnPlaneTap;
-          //   },
           // ),
           ARView(
         onARViewCreated: onARViewCreated,
@@ -100,33 +93,21 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
-            uri:
+            uri:widget.ipfsUrl??
                 "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
             scale: Vector3(0.2, 0.2, 0.2),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
-        bool? didAddNodeToAnchor = await this
-            .arObjectManager
+        bool? didAddNodeToAnchor = await arObjectManager
             ?.addNode(newNode, planeAnchor: newAnchor);
         if (didAddNodeToAnchor!) {
-          this.nodes.add(newNode);
+          nodes.add(newNode);
         } else {
-          this.arSessionManager?.onError("Adding Node to Anchor failed");
+          arSessionManager?.onError("Adding Node to Anchor failed");
         }
       } else {
-        this.arSessionManager?.onError("Adding Anchor failed");
+        arSessionManager?.onError("Adding Anchor failed");
       }
-      /*
-      // To add a node to the tapped position without creating an anchor, use the following code (Please mind: the function onRemoveEverything has to be adapted accordingly!):
-      var newNode = ARNode(
-          type: NodeType.localGLTF2,
-          uri: "Models/Chicken_01/Chicken_01.gltf",
-          scale: Vector3(0.2, 0.2, 0.2),
-          transformation: singleHitTestResult.worldTransform);
-      bool didAddWebNode = await this.arObjectManager.addNode(newNode);
-      if (didAddWebNode) {
-        this.nodes.add(newNode);
-      }*/
     }
   }
 }

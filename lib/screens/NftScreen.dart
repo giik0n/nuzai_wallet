@@ -65,7 +65,7 @@ class _NftPageState extends State<NftPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const ArCoreViewScreen()),
+                            MaterialPageRoute(builder: (context) => ArCoreViewScreen(nft.fileExtension == "glb" ? nft.ipfsUlrl : null)),
                           );
                         },
                         child: Row(

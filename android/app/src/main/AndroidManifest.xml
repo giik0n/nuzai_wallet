@@ -8,9 +8,9 @@
     <uses-feature android:name="android.hardware.camera.ar" />
    <application
         android:usesCleartextTraffic="true"
-        android:label="nuzai_wallet"
+        android:label="Nuzai Wallet"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

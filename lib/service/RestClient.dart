@@ -7,6 +7,7 @@ import 'package:nuzai_wallet/podo/TokenTransaction.dart';
 
 import '../podo/NFT.dart';
 import '../podo/Token.dart';
+import '../podo/User.dart';
 
 const String mainUrl = "https://api.nuzai.network/api/v2/";
 const String usersSubUrl = "users/";
@@ -84,6 +85,16 @@ class RestClient {
           "Content-Type": "application/json-patch+json",
         });
     return GasFee.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<User> getUserById(int id, String jwt) async{
+    var response = await get(Uri.parse("https://api.nuzai.network/api/v2/users/getbyid/$id"),
+        headers: {
+          "accept": "text/plain",
+          "Content-Type": "application/json-patch+json",
+        'Authorization': 'Bearer $jwt',
+        });
+    return User.fromJson(jsonDecode(response.body));
   }
 
   static Future<List<NFT>> loadNFTs(String jwt,String wallet) async{

@@ -26,7 +26,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   TokenNotifier? tokenNotifier;
-  bool? isNews;
+  bool? isNews = false;
   String? selectedLocale;
   bool? isFaceLogin;
   bool? isFingerprintLogin;
@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                       await prefs.setBool('sendNews', isNews);
                                       setState(() {});
                                     },
-                                    value: snapshot.data ?? false,
+                                    value: isNews!,
                                   ),
                                 ),
                               )
@@ -319,10 +319,23 @@ class _SettingsPageState extends State<SettingsPage> {
                           color: Colors.green,
                         )
                       : const SizedBox.shrink(),
-                  onTap: () {
+                  onTap: () async {
                     user.defaultNetwork =
                         (supportedNetworks.values.toList()[index]);
-                    storage.write(key: "user", value: jsonEncode(user));
+                    showDialog(
+                      // The user CANNOT close this dialog  by pressing outsite it
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) {
+                          return const CustomLoader();
+                        });
+                    await RestClient.editUser(
+                        user.token!, user.id!, "defaultNetwork", user.defaultNetwork.toString());
+                    user = await RestClient.getUserById(user.id!, user.token!);
+                    user.token = await storage.read(key: "token");
+                    print(user.toJson());
+                    await storage.write(key: "user", value: jsonEncode(user));
+                    Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
                   title: Text(supportedNetworks.keys.toList()[index]),
@@ -334,6 +347,7 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
+
 
   Future changeDialog(User user, String hint, String key) => showDialog(
       context: context,
@@ -347,9 +361,6 @@ class _SettingsPageState extends State<SettingsPage> {
           case "email":
             controller.text = user.email!;
             break;
-          case "defaultNetwork":
-            controller.text = user.defaultNetwork!.toString();
-            break;
         }
 
         return Dialog(
@@ -360,14 +371,13 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 TextField(
                   controller: controller,
-                  keyboardType: key == "defaultNetwork"
-                      ? TextInputType.number
-                      : TextInputType.text,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(hintText: hint),
                 ),
                 ElevatedButton(
                     onPressed: () async {
                       if (controller.text.isNotEmpty) {
+                        if (key == "fullname" && !controller.text.contains(" ")) return;
                         showDialog(
                             // The user CANNOT close this dialog  by pressing outsite it
                             barrierDismissible: false,

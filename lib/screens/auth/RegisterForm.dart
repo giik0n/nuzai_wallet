@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../provider/TokenNotifier.dart';
+import '../../widgets/CustomLoader.dart';
 
 InputBorder inputBorder = const OutlineInputBorder(
   borderSide: BorderSide(
@@ -86,8 +87,16 @@ class _RegisterFormState extends State<RegisterForm> {
                       onPressed: () async {
                         Response? response;
                         if (_form.currentState!.validate()) {
+                          showDialog(
+                            // The user CANNOT close this dialog  by pressing outsite it
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) {
+                                return const CustomLoader();
+                              });
                           response =
                               await RestClient.getCode(emailController.text);
+                          Navigator.pop(context);
                         }
                         if (response != null && response.statusCode == 200) {
                           setState(() {
@@ -150,8 +159,16 @@ class _RegisterFormState extends State<RegisterForm> {
                       onPressed: () async {
                         Response? response;
                         if (_form.currentState!.validate()) {
+                          showDialog(
+                            // The user CANNOT close this dialog  by pressing outsite it
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) {
+                                return const CustomLoader();
+                              });
                           response = await RestClient.verifyCode(
                               emailController.text, codeController.text);
+                          Navigator.pop(context);
                         }
                         if (response != null && response.statusCode == 200) {
                           setState(() {
@@ -188,7 +205,7 @@ Form registerFieldsForm() => Form(
               focusedErrorBorder: inputBorder,
             ),
             validator: (value) =>
-                value!.isNotEmpty ? null : "Name can't be empty".tr(),
+                value!.isNotEmpty ? value!.contains(" ")? null : "changeFullNameHint".tr() : "Name can't be empty".tr(),
           ),
           const SizedBox(
             height: 8,
@@ -261,6 +278,13 @@ Form registerFieldsForm() => Form(
                       sp.setBool("firstEnter", false);
                       Response? response;
                       if (_form.currentState!.validate()) {
+                        showDialog(
+                          // The user CANNOT close this dialog  by pressing outsite it
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) {
+                              return const CustomLoader();
+                            });
                         response = await RestClient.register(
                             emailController.text,
                             passController.text,
@@ -277,6 +301,7 @@ Form registerFieldsForm() => Form(
                             key: "password", value: passController.text);
                         await storage.write(
                             key: "user", value: jsonEncode(user));
+                        Navigator.pop(context);
                         notifier.setToken(user.token ?? "");
                         emailController.text = "";
                         passController.text = "";

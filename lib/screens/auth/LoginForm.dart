@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../podo/User.dart';
+import '../../widgets/CustomLoader.dart';
 
 InputBorder inputBorder = const OutlineInputBorder(
   borderSide: BorderSide(
@@ -161,6 +162,13 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Future<void> loginForm(TokenNotifier notifier) async {
+    showDialog(
+      // The user CANNOT close this dialog  by pressing outsite it
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return const CustomLoader();
+        });
     http.Response? response;
     if (_form.currentState!.validate()) {
       response =
@@ -169,6 +177,7 @@ class _LoginFormState extends State<LoginForm> {
     if (response != null) {
       checkResponse(response, notifier);
     }
+    Navigator.pop(context);
   }
 
   void checkResponse(http.Response response, TokenNotifier notifier) async {
