@@ -59,13 +59,19 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     this.arSessionManager?.onInitialize(
           showFeaturePoints: false,
           showPlanes: true,
-          customPlaneTexturePath: "Images/triangle.png",
-          showWorldOrigin: true,
+          customPlaneTexturePath: "assets/icons/triangle.png",
+          handlePans: true,
+          handleRotation: true,
         );
     this.arObjectManager?.onInitialize();
 
     this.arSessionManager?.onPlaneOrPointTap = onPlaneOrPointTapped;
-    this.arObjectManager?.onNodeTap = onNodeTapped;
+    this.arObjectManager?.onPanStart = onPanStarted;
+    this.arObjectManager?.onPanChange = onPanChanged;
+    this.arObjectManager?.onPanEnd = onPanEnded;
+    this.arObjectManager?.onRotationStart = onRotationStarted;
+    this.arObjectManager?.onRotationChange = onRotationChanged;
+    this.arObjectManager?.onRotationEnd = onRotationEnded;
   }
 
   Future<void> onNodeTapped(List<String> nodes) async {
@@ -79,8 +85,20 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     arSessionManager?.dispose();
   }
 
+  Future<void> onRemoveEverything() async {
+    nodes.forEach((node) {
+      this.arObjectManager?.removeNode(node);
+    });
+    anchors.forEach((anchor) {
+      this.arAnchorManager?.removeAnchor(anchor);
+    });
+    anchors = [];
+    nodes = [];
+  }
+
   Future<void> onPlaneOrPointTapped(
       List<ARHitTestResult> hitTestResults) async {
+    onRemoveEverything();
     var singleHitTestResult = hitTestResults.firstWhere(
         (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
     if (singleHitTestResult != null) {
@@ -108,5 +126,40 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
         arSessionManager?.onError("Adding Anchor failed");
       }
     }
+  }
+
+  onPanStarted(String nodeName) {
+    print("Started panning node " + nodeName);
+  }
+
+  onPanChanged(String nodeName) {
+    print("Continued panning node " + nodeName);
+  }
+
+  onPanEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended panning node " + nodeName);
+    final pannedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+
+    /*
+    * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
+    * (e.g. if you intend to share the nodes through the cloud)
+    */
+    pannedNode.transform = newTransform;
+  }
+
+  onRotationStarted(String nodeName) {
+    print("Started rotating node " + nodeName);
+  }
+
+  onRotationChanged(String nodeName) {
+    print("Continued rotating node " + nodeName);
+  }
+
+  onRotationEnded(String nodeName, Matrix4 newTransform) {
+    print("Ended rotating node " + nodeName);
+    final rotatedNode =
+        this.nodes.firstWhere((element) => element.name == nodeName);
+    rotatedNode.transform = newTransform;
   }
 }
