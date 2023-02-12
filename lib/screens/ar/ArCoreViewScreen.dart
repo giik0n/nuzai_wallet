@@ -59,7 +59,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     this.arSessionManager?.onInitialize(
           showFeaturePoints: false,
           showPlanes: true,
-          customPlaneTexturePath: "assets/icons/triangle.png",
+          customPlaneTexturePath: "assets/icons/transparent.png",
           handlePans: true,
           handleRotation: true,
         );
