@@ -153,6 +153,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  flutter_keychain:
+    dependency: "direct main"
+    description:
+      name: flutter_keychain
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -231,6 +238,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  hex:
+    dependency: transitive
+    description:
+      name: hex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   http:
     dependency: "direct main"
     description:
@@ -244,7 +258,7 @@ packages:
       name: http_parser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.2"
   image:
     dependency: transitive
     description:
@@ -329,6 +343,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  mnemonic:
+    dependency: "direct main"
+    description:
+      name: mnemonic
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   mobile_scanner:
     dependency: "direct main"
     description:

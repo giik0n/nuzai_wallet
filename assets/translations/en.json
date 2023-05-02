@@ -85,5 +85,9 @@
   "Name can't be empty" : "Name can't be empty",
   "Repeat password": "Repeat password",
   "Not match" : "Not match",
-  "next": "Next"
+  "next": "Next",
+  "importMnemonic" : "Import mnemonic",
+  "createMnemonic" : "Create mnemonic",
+  "save" : "Save",
+  "pasteMnemonic" : "Paste mnemonic"
 }

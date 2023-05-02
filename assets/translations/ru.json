@@ -83,5 +83,10 @@
   "Name can't be empty": "Введите полное имя",
   "Repeat password": "Повторите пароль",
   "Not match" : "Пароли не совпадают",
-  "next": "Далее"
+  "next": "Далее",
+  "importMnemonic" : "Импорт фразы",
+  "createMnemonic" : "Создать фразу",
+  "save" : "Сохранить",
+  "pasteMnemonic" : "Введите мнемоник фразу"
+  
 }

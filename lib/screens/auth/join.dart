@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:nuzai_wallet/config/LocalAuthApi.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,24 +31,22 @@ class _JoinPageState extends State<JoinPage> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> widgets = <Widget>[const RegisterForm(), const LoginForm()];
-
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
-            gradient: RadialGradient(
-              radius: 2,
-              center: Alignment.topLeft,
-              colors: [
-                Color.fromRGBO(9, 35, 72, 0.5),
-                Color.fromRGBO(2, 14, 33, 1)
-              ]
-            )
-          ): null,
+          decoration: Theme.of(context).brightness == Brightness.dark
+              ? const BoxDecoration(
+                  gradient: RadialGradient(
+                      radius: 2,
+                      center: Alignment.topLeft,
+                      colors: [
+                      Color.fromRGBO(9, 35, 72, 0.5),
+                      Color.fromRGBO(2, 14, 33, 1)
+                    ]))
+              : null,
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +91,9 @@ class _JoinPageState extends State<JoinPage> {
                                   Expanded(
                                     child: CupertinoButton(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: Theme.of(context).listTileTheme.tileColor,
+                                        color: Theme.of(context)
+                                            .listTileTheme
+                                            .tileColor,
                                         child: Center(
                                           child: Image.asset(
                                             'assets/icons/google.png',
@@ -105,7 +106,9 @@ class _JoinPageState extends State<JoinPage> {
                                   Expanded(
                                     child: CupertinoButton(
                                         borderRadius: BorderRadius.circular(8),
-                                        color: Theme.of(context).listTileTheme.tileColor,
+                                        color: Theme.of(context)
+                                            .listTileTheme
+                                            .tileColor,
                                         child: Center(
                                           child: Image.asset(
                                             'assets/icons/facebook.png',
@@ -129,8 +132,8 @@ class _JoinPageState extends State<JoinPage> {
                                   height: 1,
                                 )),
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
                                   child: const Text("or").tr(),
                                 ),
                                 Expanded(
@@ -198,5 +201,3 @@ class _JoinPageState extends State<JoinPage> {
     );
   }
 }
-
-

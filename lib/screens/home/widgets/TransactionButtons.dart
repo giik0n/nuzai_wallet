@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nuzai_wallet/podo/User.dart';
 import 'package:nuzai_wallet/screens/home/SendTokensPage.dart';
+import 'package:provider/provider.dart';
+
+import '../../../provider/MnemonicNotifier.dart';
 
 Widget getButtons(BuildContext context, User user) {
   ThemeData themeData = Theme.of(context);
+  var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
+
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
@@ -14,6 +19,7 @@ Widget getButtons(BuildContext context, User user) {
           IconButton(
             padding: EdgeInsets.zero,
             onPressed: () {
+              print("Mnemonic" + mnemonicNotifier.token);
               showModalBottomSheet<void>(
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(
@@ -36,11 +42,13 @@ Widget getButtons(BuildContext context, User user) {
                           ),
                           Text(
                             'receive',
-                            style: themeData.textTheme.headline5!.copyWith(color: Colors.black),
+                            style: themeData.textTheme.headline5!
+                                .copyWith(color: Colors.black),
                           ).tr(),
                           Text(
                             'scanAddressToReceivePayment',
-                            style: themeData.textTheme.bodySmall!.copyWith(color: Colors.grey),
+                            style: themeData.textTheme.bodySmall!
+                                .copyWith(color: Colors.grey),
                           ).tr(),
                           FittedBox(
                             fit: BoxFit.fitWidth,
@@ -54,8 +62,7 @@ Widget getButtons(BuildContext context, User user) {
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
                                         text: user.wallet!,
-                                        style: TextStyle(
-                                            color: Colors.black)),
+                                        style: TextStyle(color: Colors.black)),
                                   ),
                                 ),
                                 IconButton(
@@ -69,8 +76,7 @@ Widget getButtons(BuildContext context, User user) {
                                                 const Text('clipboard').tr()));
                                   }),
                                   icon: const Icon(Icons.copy),
-                                  color: Colors.black
-                                      .withAlpha(55),
+                                  color: Colors.black.withAlpha(55),
                                 ),
                               ],
                             ),

@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keychain/flutter_keychain.dart';
+import 'package:nuzai_wallet/provider/MnemonicNotifier.dart';
 import 'package:nuzai_wallet/provider/TokenNotifier.dart';
+import 'package:nuzai_wallet/screens/auth/CreateWallet.dart';
 import 'package:nuzai_wallet/theme/theme_constants.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +17,7 @@ void main() async {
     supportedLocales: const [Locale('en'), Locale('ru')],
     path: 'assets/translations',
     fallbackLocale: const Locale('en'),
-    child: const Wrapper(),
+    child: Wrapper(),
   ));
 }
 
@@ -26,6 +29,8 @@ class Wrapper extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<TokenNotifier>.value(value: TokenNotifier()),
+        ChangeNotifierProvider<MnemonicNotifier>.value(
+            value: MnemonicNotifier()),
       ],
       child: MaterialApp(
           localizationsDelegates: context.localizationDelegates,
@@ -36,20 +41,32 @@ class Wrapper extends StatelessWidget {
           darkTheme: darkTheme,
           themeMode: ThemeMode.system,
           debugShowCheckedModeBanner: false,
-          home: const MyApp()),
+          home: MyApp()),
     );
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TokenNotifier>(
       builder: (context, TokenNotifier notifier, child) {
         return notifier.token.isNotEmpty
-            ? const MyHomePage()
+            ? Consumer<MnemonicNotifier>(
+                builder: (context, MnemonicNotifier mnemonicNotifier, child) {
+                print(
+                    "Mnemonic:" + (mnemonicNotifier.token.isEmpty).toString());
+                return mnemonicNotifier.token.isEmpty
+                    ? CreateWallet()
+                    : MyHomePage();
+              })
             : const JoinPage();
       },
     );

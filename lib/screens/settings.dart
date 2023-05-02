@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
@@ -14,6 +15,8 @@ import 'package:nuzai_wallet/service/RestClient.dart';
 import 'package:nuzai_wallet/widgets/CustomLoader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../provider/MnemonicNotifier.dart';
 
 class SettingsPage extends StatefulWidget {
   final User? user;
@@ -38,6 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
     TextTheme textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     tokenNotifier = Provider.of<TokenNotifier>(context);
+    var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
     User user = widget.user!;
     String settingsTitle = 'settings'.tr();
     Color tileColor = Theme.of(context).listTileTheme.tileColor!;
@@ -50,8 +54,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     iconTheme: Theme.of(context).iconTheme,
                     actions: [
                       IconButton(
-                        onPressed: () {
-                          tokenNotifier!.setToken("");
+                        onPressed: () async {
+                          await FlutterKeychain.remove(key: "mnemonic");
+                          await FlutterKeychain.clear();
+                          await tokenNotifier!.setToken("");
+                          mnemonicNotifier.setMnemonic("");
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.logout),
@@ -61,16 +68,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   body: Container(
                     height: MediaQuery.of(context).size.height,
-                    decoration: Theme.of(context).brightness == Brightness.dark ? const BoxDecoration(
-                        gradient: RadialGradient(
-                            radius: 1.5,
-                            center: Alignment.bottomRight,
-                            colors: [
-                              Color.fromRGBO(19, 49, 90, 1),
-                              Color.fromRGBO(8, 26, 52, 1)
-                            ]
-                        )
-                    ): null,
+                    decoration: Theme.of(context).brightness == Brightness.dark
+                        ? const BoxDecoration(
+                            gradient: RadialGradient(
+                                radius: 1.5,
+                                center: Alignment.bottomRight,
+                                colors: [
+                                Color.fromRGBO(19, 49, 90, 1),
+                                Color.fromRGBO(8, 26, 52, 1)
+                              ]))
+                        : null,
                     child: SingleChildScrollView(
                       child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -95,7 +102,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 8,),
+                              const SizedBox(
+                                height: 8,
+                              ),
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
@@ -154,8 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(8)),
-                                      color: tileColor
-                                  ),
+                                      color: tileColor),
                                   child: ListTile(
                                     tileColor: tileColor,
                                     shape: RoundedRectangleBorder(
@@ -165,7 +173,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                     },
                                     title: Text("language".tr()),
                                     trailing: Icon(Icons.info_outlined,
-                                        color: Theme.of(context).iconTheme.color),
+                                        color:
+                                            Theme.of(context).iconTheme.color),
                                   ),
                                 ),
                               ),
@@ -173,60 +182,66 @@ class _SettingsPageState extends State<SettingsPage> {
                                 decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(8)),
-                                    color: tileColor
-                                ),
+                                    color: tileColor),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     ListTile(
                                         tileColor: Colors.transparent,
-                                      onTap: () => selectNetworkDialog(user),
-                                      title: const Text("network").tr(),
-                                      trailing: const Icon(Icons.arrow_forward_ios,
+                                        onTap: () => selectNetworkDialog(user),
+                                        title: const Text("network").tr(),
+                                        trailing: const Icon(
+                                          Icons.arrow_forward_ios,
                                           color: Colors.transparent,
-                                    )),
-                                    avaliableTypes!
-                                        .contains(BiometricType.fingerprint) ||
-                                        avaliableTypes!
-                                            .contains(BiometricType.face) ||
-                                        avaliableTypes!
-                                            .contains(BiometricType.strong)
+                                        )),
+                                    avaliableTypes!.contains(
+                                                BiometricType.fingerprint) ||
+                                            avaliableTypes!
+                                                .contains(BiometricType.face) ||
+                                            avaliableTypes!
+                                                .contains(BiometricType.strong)
                                         ? ListTile(
-                                      tileColor: Colors.transparent,
-                                      title: const Text("fingerprint").tr(),
-                                      trailing: CupertinoSwitch(
-                                        onChanged: (isEnabled) async {
-                                          if (await LocalAuthApi.authenticate()) {
-                                            final prefs = await SharedPreferences
-                                                .getInstance();
-                                            await prefs.setBool(
-                                                'isFingerprintLogin', isEnabled);
-                                            setState(() {});
-                                          }
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                              content: isEnabled
-                                                  ? const Text(
-                                                  'fingerprintEnabled')
-                                                  .tr()
-                                                  : const Text(
-                                                  'fingerprintDisabled')
-                                                  .tr()));
-                                        },
-                                        value: isFingerprintLogin ?? false,
-                                      ),
-                                    )
+                                            tileColor: Colors.transparent,
+                                            title:
+                                                const Text("fingerprint").tr(),
+                                            trailing: CupertinoSwitch(
+                                              onChanged: (isEnabled) async {
+                                                if (await LocalAuthApi
+                                                    .authenticate()) {
+                                                  final prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  await prefs.setBool(
+                                                      'isFingerprintLogin',
+                                                      isEnabled);
+                                                  setState(() {});
+                                                }
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: isEnabled
+                                                            ? const Text(
+                                                                    'fingerprintEnabled')
+                                                                .tr()
+                                                            : const Text(
+                                                                    'fingerprintDisabled')
+                                                                .tr()));
+                                              },
+                                              value:
+                                                  isFingerprintLogin ?? false,
+                                            ),
+                                          )
                                         : const SizedBox.shrink(),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 8,),
+                              SizedBox(
+                                height: 8,
+                              ),
                               Container(
                                 decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(8)),
-                                    color: tileColor
-                                ),
+                                    color: tileColor),
                                 child: ListTile(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
@@ -257,7 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<bool> _getSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    isNews = prefs.getBool('sendNews')??false;
+    isNews = prefs.getBool('sendNews') ?? false;
     selectedLocale = prefs.getString('selectedLocale');
     isFingerprintLogin = prefs.getBool("isFingerprintLogin");
     isFaceLogin = prefs.getBool("isFaceLogin");
@@ -323,14 +338,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     user.defaultNetwork =
                         (supportedNetworks.values.toList()[index]);
                     showDialog(
-                      // The user CANNOT close this dialog  by pressing outsite it
+                        // The user CANNOT close this dialog  by pressing outsite it
                         barrierDismissible: false,
                         context: context,
                         builder: (_) {
                           return const CustomLoader();
                         });
-                    await RestClient.editUser(
-                        user.token!, user.id!, "defaultNetwork", user.defaultNetwork.toString());
+                    await RestClient.editUser(user.token!, user.id!,
+                        "defaultNetwork", user.defaultNetwork.toString());
                     user = await RestClient.getUserById(user.id!, user.token!);
                     user.token = await storage.read(key: "token");
                     print(user.toJson());
@@ -347,7 +362,6 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
-
 
   Future changeDialog(User user, String hint, String key) => showDialog(
       context: context,
@@ -377,7 +391,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ElevatedButton(
                     onPressed: () async {
                       if (controller.text.isNotEmpty) {
-                        if (key == "fullname" && !controller.text.contains(" ")) return;
+                        if (key == "fullname" && !controller.text.contains(" "))
+                          return;
                         showDialog(
                             // The user CANNOT close this dialog  by pressing outsite it
                             barrierDismissible: false,
