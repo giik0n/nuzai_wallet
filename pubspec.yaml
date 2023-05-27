@@ -60,6 +60,7 @@ dependencies:
   ar_flutter_plugin: ^0.7.1
   flutter_automation: ^2.0.0
   flutter_keychain: ^2.2.1
+  web3dart: ^2.5.1
 
 dev_dependencies:
   flutter_test:

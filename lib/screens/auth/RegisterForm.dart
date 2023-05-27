@@ -64,6 +64,9 @@ class _RegisterFormState extends State<RegisterForm> {
           children: [
             TextFormField(
               controller: emailController,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              autofocus: true,
               decoration: InputDecoration(
                 hintText: "Email".tr(),
                 filled: true,
@@ -88,7 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         Response? response;
                         if (_form.currentState!.validate()) {
                           showDialog(
-                            // The user CANNOT close this dialog  by pressing outsite it
+                              // The user CANNOT close this dialog  by pressing outsite it
                               barrierDismissible: false,
                               context: context,
                               builder: (_) {
@@ -106,7 +109,9 @@ class _RegisterFormState extends State<RegisterForm> {
                           print(response?.statusCode);
                         }
                       },
-                      child: const Text("Sign up", style: TextStyle(color: Colors.white)).tr(),
+                      child: const Text("Sign up",
+                              style: TextStyle(color: Colors.white))
+                          .tr(),
                     ))),
             const SizedBox(
               height: 8,
@@ -142,11 +147,8 @@ class _RegisterFormState extends State<RegisterForm> {
               onCompleted: (value) {
                 codeController.text = value;
               },
-              onChanged: (value) {
-
-              },
+              onChanged: (value) {},
               appContext: context,
-
             ),
             const SizedBox(
               height: 8,
@@ -160,7 +162,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         Response? response;
                         if (_form.currentState!.validate()) {
                           showDialog(
-                            // The user CANNOT close this dialog  by pressing outsite it
+                              // The user CANNOT close this dialog  by pressing outsite it
                               barrierDismissible: false,
                               context: context,
                               builder: (_) {
@@ -179,7 +181,9 @@ class _RegisterFormState extends State<RegisterForm> {
                           print(response?.statusCode);
                         }
                       },
-                      child: const Text("next", style: TextStyle(color: Colors.white)).tr(),
+                      child: const Text("next",
+                              style: TextStyle(color: Colors.white))
+                          .tr(),
                     ))),
             const SizedBox(
               height: 8,
@@ -204,8 +208,11 @@ Form registerFieldsForm() => Form(
               focusedBorder: inputBorder,
               focusedErrorBorder: inputBorder,
             ),
-            validator: (value) =>
-                value!.isNotEmpty ? value.contains(" ")? null : "changeFullNameHint".tr() : "Name can't be empty".tr(),
+            validator: (value) => value!.isNotEmpty
+                ? value.contains(" ")
+                    ? null
+                    : "changeFullNameHint".tr()
+                : "Name can't be empty".tr(),
           ),
           const SizedBox(
             height: 8,
@@ -279,7 +286,7 @@ Form registerFieldsForm() => Form(
                       Response? response;
                       if (_form.currentState!.validate()) {
                         showDialog(
-                          // The user CANNOT close this dialog  by pressing outsite it
+                            // The user CANNOT close this dialog  by pressing outsite it
                             barrierDismissible: false,
                             context: context,
                             builder: (_) {
@@ -293,6 +300,7 @@ Form registerFieldsForm() => Form(
                       if (response != null && response.statusCode == 201) {
                         User user = User.fromJson(
                             json.decode(response.body)["bodyResponse"]);
+                        user.wallet = "";
                         FlutterSecureStorage storage =
                             const FlutterSecureStorage();
                         storage.write(
@@ -306,10 +314,15 @@ Form registerFieldsForm() => Form(
                         emailController.text = "";
                         passController.text = "";
                       } else {
+                        Navigator.pop(context);
+                        showErrorDialog(
+                            context, response?.body ?? "Register Error");
                         print(response?.statusCode);
                       }
                     },
-                    child: const Text("btnRegister", style: TextStyle(color: Colors.white)).tr(),
+                    child: const Text("btnRegister",
+                            style: TextStyle(color: Colors.white))
+                        .tr(),
                   ))),
           const SizedBox(
             height: 8,
@@ -317,3 +330,31 @@ Form registerFieldsForm() => Form(
         ],
       ),
     );
+
+Future<void> showErrorDialog(
+    BuildContext context, String responseMessage) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(responseMessage),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenNotifier extends ChangeNotifier {
   final String key = "token";
@@ -12,6 +10,7 @@ class TokenNotifier extends ChangeNotifier {
   String get token => _token;
   TokenNotifier() {
     initToken();
+    print("Token init");
   }
 
   setToken(String newToken) {
@@ -19,7 +18,7 @@ class TokenNotifier extends ChangeNotifier {
     _storage.write(key: "token", value: newToken);
     newToken == ""
         ? null
-        : Timer.periodic(const Duration(minutes: 1000), (_) => logOut());
+        : Timer.periodic(const Duration(minutes: 10), (_) => logOut());
     notifyListeners();
   }
 

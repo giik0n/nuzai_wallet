@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   final int selectedIndex;
@@ -15,7 +14,6 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     var _selectedIndex = widget.selectedIndex;
-    var _onItemTapped = widget.onItemTapped;
     ThemeData themeData = Theme.of(context);
     return new BottomNavigationBar(
       backgroundColor: Colors.transparent,

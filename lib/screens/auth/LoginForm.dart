@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,8 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:exomal_wallet/config/LocalAuthApi.dart';
 import 'package:exomal_wallet/provider/TokenNotifier.dart';
 import 'package:exomal_wallet/service/RestClient.dart';
+import 'package:mnemonic/mnemonic.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web3dart/web3dart.dart';
 
 import '../../podo/User.dart';
 import '../../widgets/CustomLoader.dart';
@@ -86,6 +87,9 @@ class _LoginFormState extends State<LoginForm> {
                     children: [
                       TextFormField(
                         controller: emailController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: true,
                         decoration: InputDecoration(
                           hintText: "Email".tr(),
                           filled: true,
@@ -185,12 +189,45 @@ class _LoginFormState extends State<LoginForm> {
       FlutterSecureStorage storage = const FlutterSecureStorage();
       storage.write(key: "email", value: emailController.text);
       storage.write(key: "password", value: passController.text);
+      String? mnemonic =
+          await storage.read(key: "mnemonic" + (emailController.text)) ?? "";
+      Credentials credentials =
+          EthPrivateKey.fromHex(mnemonicToEntropy(mnemonic));
+      user.wallet = credentials.address.hex;
       await storage.write(key: "user", value: jsonEncode(user));
       notifier.setToken(user.token ?? "");
       emailController.text = "";
       passController.text = "";
     } else {
-      print(response.statusCode);
+      showErrorDialog(context, response.body);
     }
   }
+}
+
+Future<void> showErrorDialog(
+    BuildContext context, String responseMessage) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(responseMessage),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Close'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

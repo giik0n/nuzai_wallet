@@ -71,7 +71,7 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                 ),
                 Text(token.amountInUsd!, style: themeData.textTheme.bodySmall),
                 const SizedBox(height: 16),
-                getButtons(context, user),
+                headerTransactionButtons(context, user),
                 transactions.isEmpty
                     ? Expanded(
                         child: Column(
@@ -100,31 +100,36 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                                     child: Text(transaction.transactionTime!),
                                   ),
                                   ListTile(
-                                    leading: Image.asset(isReceived
-                                        ? "assets/icons/received_transaction.png"
-                                        : "assets/icons/sent_transaction.png", color: Theme.of(context).textTheme.bodyText1?.color),
-                                    title: Text(
-                                        "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
-                                    subtitle: Text(
-                                      transaction.status == 0
-                                          ? "Confirmed"
-                                          : "Pending",
-                                      style:
-                                          const TextStyle(color: Colors.green),
-                                    ).tr(),
-                                    trailing: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                            "${transaction.amount!} ${transaction.ticker!}"),
-                                        Text(
-                                          "\$${transaction.amount!}",
-                                          style: themeData.textTheme.bodySmall,
-                                        )
-                                      ],
-                                    ),
-                                      tileColor: Colors.transparent
-                                  ),
+                                      leading: Image.asset(
+                                          isReceived
+                                              ? "assets/icons/received_transaction.png"
+                                              : "assets/icons/sent_transaction.png",
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              ?.color),
+                                      title: Text(
+                                          "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
+                                      subtitle: Text(
+                                        transaction.status == 0
+                                            ? "Confirmed"
+                                            : "Pending",
+                                        style: const TextStyle(
+                                            color: Colors.green),
+                                      ).tr(),
+                                      trailing: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                              "${transaction.amount!} ${transaction.ticker!}"),
+                                          Text(
+                                            "\$${transaction.amount!}",
+                                            style:
+                                                themeData.textTheme.bodySmall,
+                                          )
+                                        ],
+                                      ),
+                                      tileColor: Colors.transparent),
                                 ],
                               );
                             },

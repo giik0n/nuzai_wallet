@@ -1,27 +1,23 @@
-import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/podo/NFT.dart';
 import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
 import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
-class NftPage extends StatefulWidget {
+class NftScreen extends StatefulWidget {
   final NFT nft;
 
-  const NftPage({Key? key, required this.nft}) : super(key: key);
+  const NftScreen({Key? key, required this.nft}) : super(key: key);
 
   @override
-  State<NftPage> createState() => _NftPageState();
+  State<NftScreen> createState() => _NftScreenState();
 }
 
-class _NftPageState extends State<NftPage> {
+class _NftScreenState extends State<NftScreen> {
   @override
   Widget build(BuildContext context) {
     NFT nft = widget.nft;
     TextTheme textTheme = Theme.of(context).textTheme;
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +61,11 @@ class _NftPageState extends State<NftPage> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ArCoreViewScreen(nft.fileExtension == "glb" ? nft.ipfsUlrl : null)),
+                            MaterialPageRoute(
+                                builder: (context) => ArCoreViewScreen(
+                                    nft.fileExtension == "glb"
+                                        ? nft.ipfsUlrl
+                                        : null)),
                           );
                         },
                         child: Row(
@@ -77,7 +77,10 @@ class _NftPageState extends State<NftPage> {
                               child: Image.asset("assets/icons/eye_icon.png",
                                   height: 10, width: 16),
                             ),
-                            const Text("See in AR", style: TextStyle(color: Colors.white),).tr(),
+                            const Text(
+                              "See in AR",
+                              style: TextStyle(color: Colors.white),
+                            ).tr(),
                           ],
                         ),
                       ),
@@ -86,7 +89,8 @@ class _NftPageState extends State<NftPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Theme.of(context).listTileTheme.tileColor,
@@ -98,8 +102,15 @@ class _NftPageState extends State<NftPage> {
                         children: [
                           Row(
                             children: [
-                              Text(nft.title![0], style: textTheme.headline4!.copyWith(color: Color.fromRGBO(55, 135, 254, 1)),),
-                              Text(nft.title!.substring(1, nft.title!.length), style: textTheme.headline4,),
+                              Text(
+                                nft.title![0],
+                                style: textTheme.headline4!.copyWith(
+                                    color: Color.fromRGBO(55, 135, 254, 1)),
+                              ),
+                              Text(
+                                nft.title!.substring(1, nft.title!.length),
+                                style: textTheme.headline4,
+                              ),
                             ],
                           ),
                           Text(
@@ -119,10 +130,12 @@ class _NftPageState extends State<NftPage> {
                         child: SizedBox(
                           height: 60,
                           child: ElevatedButton(
-
                             style: buttonStyle,
                             onPressed: () {},
-                            child:  const Text("send", style: TextStyle(color: Colors.white),).tr(),
+                            child: const Text(
+                              "send",
+                              style: TextStyle(color: Colors.white),
+                            ).tr(),
                           ),
                         ),
                       ),
@@ -133,7 +146,10 @@ class _NftPageState extends State<NftPage> {
                           child: ElevatedButton(
                             style: buttonStyle,
                             onPressed: () {},
-                            child:  const Text("Sell", style: TextStyle(color: Colors.white),).tr(),
+                            child: const Text(
+                              "Sell",
+                              style: TextStyle(color: Colors.white),
+                            ).tr(),
                           ),
                         ),
                       ),

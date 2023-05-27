@@ -6,16 +6,12 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:exomal_wallet/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    final storage = new FlutterSecureStorage();
-    String? value = await storage.read(key: "token");
-
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 

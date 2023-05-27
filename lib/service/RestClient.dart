@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:exomal_wallet/podo/GasFee.dart';
 import 'package:exomal_wallet/podo/TokenTransaction.dart';

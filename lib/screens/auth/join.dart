@@ -1,12 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:exomal_wallet/config/LocalAuthApi.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visibility_aware_state/visibility_aware_state.dart';
-import '../../provider/TokenNotifier.dart';
 import 'LoginForm.dart';
 import 'RegisterForm.dart';
 
@@ -60,7 +53,10 @@ class _JoinPageState extends State<JoinPage> {
                       children: <Widget>[
                         Image.asset(
                           'assets/icons/Logo.png',
-                          scale: 1.5,
+                          scale: 3,
+                        ),
+                        SizedBox(
+                          height: 20,
                         ),
                         RichText(
                           text: TextSpan(
@@ -69,10 +65,10 @@ class _JoinPageState extends State<JoinPage> {
                             children: [
                               const TextSpan(text: "Join "),
                               TextSpan(
-                                  text: "N",
+                                  text: "E",
                                   style:
                                       TextStyle(color: colorScheme.secondary)),
-                              const TextSpan(text: "uzai wallet"),
+                              const TextSpan(text: "xomal wallet"),
                             ],
                           ),
                         ),
@@ -85,39 +81,39 @@ class _JoinPageState extends State<JoinPage> {
                           child: Column(
                             children: [
                               widgets[selectedWidget],
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: CupertinoButton(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Theme.of(context)
-                                            .listTileTheme
-                                            .tileColor,
-                                        child: Center(
-                                          child: Image.asset(
-                                            'assets/icons/google.png',
-                                            scale: 1.5,
-                                          ),
-                                        ),
-                                        onPressed: () {}),
-                                  ),
-                                  const VerticalDivider(),
-                                  Expanded(
-                                    child: CupertinoButton(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Theme.of(context)
-                                            .listTileTheme
-                                            .tileColor,
-                                        child: Center(
-                                          child: Image.asset(
-                                            'assets/icons/facebook.png',
-                                          ),
-                                        ),
-                                        onPressed: () {}),
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     Expanded(
+                              //       child: CupertinoButton(
+                              //           borderRadius: BorderRadius.circular(8),
+                              //           color: Theme.of(context)
+                              //               .listTileTheme
+                              //               .tileColor,
+                              //           child: Center(
+                              //             child: Image.asset(
+                              //               'assets/icons/google.png',
+                              //               scale: 1.5,
+                              //             ),
+                              //           ),
+                              //           onPressed: () {}),
+                              //     ),
+                              //     const VerticalDivider(),
+                              //     Expanded(
+                              //       child: CupertinoButton(
+                              //           borderRadius: BorderRadius.circular(8),
+                              //           color: Theme.of(context)
+                              //               .listTileTheme
+                              //               .tileColor,
+                              //           child: Center(
+                              //             child: Image.asset(
+                              //               'assets/icons/facebook.png',
+                              //             ),
+                              //           ),
+                              //           onPressed: () {}),
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),

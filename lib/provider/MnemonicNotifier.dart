@@ -1,28 +1,41 @@
-import 'dart:async';
-import 'dart:math';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mnemonic/mnemonic.dart';
+import 'package:web3dart/web3dart.dart';
+import '../podo/User.dart';
 
 class MnemonicNotifier extends ChangeNotifier {
   final String key = "mnemonic";
-  String _token = "";
-  String get token => _token;
-  TokenNotifier() {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  String _mnemonic = "";
+  String get mnemonic => _mnemonic;
+  MnemonicNotifier() {
     initMnemonic();
+    print("Mnemonic init");
   }
 
-  saveMnemonic(String token) {
-    _token = token;
-    FlutterSecureStorage().write(key: key, value: token);
-    print("Mnemonic saved");
+  saveMnemonic(String token, User user) async {
+    _mnemonic = token;
+    _storage.write(key: key + (user.email ?? ""), value: token);
+
+    Credentials credentials = EthPrivateKey.fromHex(mnemonicToEntropy(token));
+    user.wallet = credentials.address.hex;
+    _storage.write(key: "user", value: jsonEncode(user));
     notifyListeners();
   }
 
   initMnemonic() async {
-    _token = await FlutterSecureStorage().read(key: key) ?? "";
+    String? userStr = await FlutterSecureStorage().read(key: "user");
+    User user = User.fromJson(jsonDecode(userStr!));
+    _mnemonic = await _storage.read(key: key + (user.email ?? "")) ?? "";
     notifyListeners();
+  }
+
+  logOut(User user) {
+    _mnemonic = "";
+    notifyListeners();
+    saveMnemonic("", user);
   }
 }

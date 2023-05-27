@@ -31,7 +31,7 @@ Widget nftGrid(BuildContext context, User user) {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  NftPage(nft: tokens[index])));
+                                  NftScreen(nft: tokens[index])));
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
@@ -57,7 +57,7 @@ Widget nftGrid(BuildContext context, User user) {
             )
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
+              children: [
                 const CustomLoader(),
                 const SizedBox(height: 16),
                 const Text("loading").tr(),

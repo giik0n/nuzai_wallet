@@ -3,13 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exomal_wallet/podo/User.dart';
 import 'package:exomal_wallet/screens/home/SendTokensPage.dart';
-import 'package:provider/provider.dart';
 
-import '../../../provider/MnemonicNotifier.dart';
-
-Widget getButtons(BuildContext context, User user) {
+Widget headerTransactionButtons(BuildContext context, User user) {
   ThemeData themeData = Theme.of(context);
-  var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
 
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -19,7 +15,6 @@ Widget getButtons(BuildContext context, User user) {
           IconButton(
             padding: EdgeInsets.zero,
             onPressed: () {
-              print("Mnemonic" + mnemonicNotifier.token);
               showModalBottomSheet<void>(
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(
@@ -105,9 +100,10 @@ Widget getButtons(BuildContext context, User user) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SendTokensPage(
-                            user: user,
-                          )));
+                    builder: (context) => SendTokensPage(
+                      user: user,
+                    ),
+                  ));
             },
             icon: Image.asset("assets/icons/send.png",
                 color: Theme.of(context).textTheme.bodyText1?.color),

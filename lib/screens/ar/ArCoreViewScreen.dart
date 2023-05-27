@@ -13,7 +13,7 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class ArCoreViewScreen extends StatefulWidget {
-  String? ipfsUrl;
+  final String? ipfsUrl;
   ArCoreViewScreen(this.ipfsUrl, {Key? key}) : super(key: key);
 
   @override
@@ -36,11 +36,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body:
-          // BabylonJSViewer(
-          //   src: 'https://models.babylonjs.com/boombox.glb',
-          // ),
-          ARView(
+      body: ARView(
         onARViewCreated: onARViewCreated,
         planeDetectionConfig: PlaneDetectionConfig.horizontal,
       ),
@@ -101,30 +97,29 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     onRemoveEverything();
     var singleHitTestResult = hitTestResults.firstWhere(
         (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
-    if (singleHitTestResult != null) {
-      var newAnchor =
-          ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
-      bool? didAddAnchor = await this.arAnchorManager?.addAnchor(newAnchor);
-      if (didAddAnchor!) {
-        this.anchors.add(newAnchor);
-        // Add note to anchor
+    var newAnchor =
+        ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
+    bool? didAddAnchor = await this.arAnchorManager?.addAnchor(newAnchor);
+    if (didAddAnchor!) {
+      this.anchors.add(newAnchor);
+      // Add note to anchor
 
-        var newNode = ARNode(
-            type: NodeType.localGLTF2,
-            uri: widget.ipfsUrl ?? "assets/models/tiger.gltf",
-            scale: vector.Vector3(1.2, 1.2, 1.2),
-            position: vector.Vector3(0.0, 0.0, 0.0),
-            rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
-        bool? didAddNodeToAnchor =
-            await arObjectManager?.addNode(newNode, planeAnchor: newAnchor);
-        if (didAddNodeToAnchor!) {
-          nodes.add(newNode);
-        } else {
-          arSessionManager?.onError("Adding Node to Anchor failed");
-        }
+      var newNode = ARNode(
+          type: NodeType.webGLB,
+          uri: widget.ipfsUrl ??
+              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+          scale: vector.Vector3(1.2, 1.2, 1.2),
+          position: vector.Vector3(0.0, 0.0, 0.0),
+          rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
+      bool? didAddNodeToAnchor =
+          await arObjectManager?.addNode(newNode, planeAnchor: newAnchor);
+      if (didAddNodeToAnchor!) {
+        nodes.add(newNode);
       } else {
-        arSessionManager?.onError("Adding Anchor failed");
+        arSessionManager?.onError("Adding Node to Anchor failed");
       }
+    } else {
+      arSessionManager?.onError("Adding Anchor failed");
     }
   }
 

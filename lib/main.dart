@@ -1,15 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
 import 'package:exomal_wallet/provider/TokenNotifier.dart';
 import 'package:exomal_wallet/screens/auth/CreateWallet.dart';
 import 'package:exomal_wallet/theme/theme_constants.dart';
-import 'package:exomal_wallet/provider/TokenNotifier.dart';
-import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
-import 'package:exomal_wallet/theme/theme_constants.dart';
 import 'package:provider/provider.dart';
 
+import 'config/LocalAuthApi.dart';
 import 'screens/auth/join.dart';
 import 'screens/home/MyHomePage.dart';
 
@@ -33,7 +30,7 @@ class Wrapper extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<TokenNotifier>.value(value: TokenNotifier()),
         ChangeNotifierProvider<MnemonicNotifier>.value(
-            value: MnemonicNotifier()),
+            value: MnemonicNotifier())
       ],
       child: MaterialApp(
           localizationsDelegates: context.localizationDelegates,
@@ -64,11 +61,22 @@ class _MyAppState extends State<MyApp> {
         return notifier.token.isNotEmpty
             ? Consumer<MnemonicNotifier>(
                 builder: (context, MnemonicNotifier mnemonicNotifier, child) {
-                print(
-                    "Mnemonic:" + (!mnemonicNotifier.token.isEmpty).toString());
-                return mnemonicNotifier.token.isEmpty
+                print("Mnemonic:" +
+                    (!mnemonicNotifier.mnemonic.isEmpty).toString());
+                return mnemonicNotifier.mnemonic.isEmpty
                     ? CreateWallet()
-                    : MyHomePage();
+                    : FutureBuilder(
+                        future: LocalAuthApi.authenticate(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data == true) {
+                              return MyHomePage();
+                            } else {
+                              return CreateWallet();
+                            }
+                          }
+                          return SizedBox.shrink();
+                        }));
               })
             : const JoinPage();
       },

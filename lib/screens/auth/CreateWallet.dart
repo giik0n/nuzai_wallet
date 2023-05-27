@@ -1,17 +1,14 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:exomal_wallet/config/LocalAuthApi.dart';
 import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visibility_aware_state/visibility_aware_state.dart';
-import '../../provider/TokenNotifier.dart';
-import 'LoginForm.dart';
-import 'RegisterForm.dart';
 import 'package:mnemonic/mnemonic.dart';
+
+import '../../podo/User.dart';
 
 class CreateWallet extends StatefulWidget {
   const CreateWallet({Key? key}) : super(key: key);
@@ -34,6 +31,7 @@ class _ImportMnemonicState extends State<ImportMnemonic> {
   @override
   Widget build(BuildContext context) {
     var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
+    FlutterSecureStorage storage = const FlutterSecureStorage();
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +47,7 @@ class _ImportMnemonicState extends State<ImportMnemonic> {
             children: [
               SizedBox(
                 height: 48,
-                width: 270,
+                width: 250,
                 child: TextField(
                   controller: mnemonicPhraseController,
                   onChanged: ((value) => setState(() {
@@ -81,7 +79,9 @@ class _ImportMnemonicState extends State<ImportMnemonic> {
               onPressed: () async {
                 print("saving...");
                 if (validateMnemonic(mnemonicPhrase)) {
-                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase);
+                  String? userStr = await storage.read(key: "user");
+                  User user = User.fromJson(jsonDecode(userStr!));
+                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase, user);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Error".tr()),
@@ -110,6 +110,7 @@ class _GenerateMnemonicState extends State<GenerateMnemonic> {
   Widget build(BuildContext context) {
     var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
     mnemonicPhraseController.text = mnemonicPhrase;
+    FlutterSecureStorage storage = const FlutterSecureStorage();
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,13 +120,13 @@ class _GenerateMnemonicState extends State<GenerateMnemonic> {
             borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              Container(
                 height: 48,
-                width: 270,
+                width: 250,
                 child: TextField(
                   controller: mnemonicPhraseController,
                   onChanged: ((value) => setState(() {
@@ -154,9 +155,10 @@ class _GenerateMnemonicState extends State<GenerateMnemonic> {
             height: 48,
             child: ElevatedButton(
               onPressed: () async {
-                print("saving...");
                 if (validateMnemonic(mnemonicPhrase)) {
-                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase);
+                  String? userStr = await storage.read(key: "user");
+                  User user = User.fromJson(jsonDecode(userStr!));
+                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase, user);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Error".tr()),
@@ -181,6 +183,11 @@ class _CreateWalletState extends State<CreateWallet> {
     ),
     borderRadius: BorderRadius.all(Radius.circular(8)),
   );
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +224,7 @@ class _CreateWalletState extends State<CreateWallet> {
             )),
       ],
     );
+
     return Scaffold(
       body: SafeArea(
         child: Container(

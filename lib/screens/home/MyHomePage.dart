@@ -1,20 +1,14 @@
 import 'dart:convert';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:exomal_wallet/screens/home/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:exomal_wallet/screens/home/widgets/EmptyListWidget.dart';
-import 'package:exomal_wallet/screens/home/widgets/NftsGridWidger.dart';
-import 'package:exomal_wallet/screens/home/widgets/TokenListWidget.dart';
-import 'package:exomal_wallet/screens/home/widgets/TransactionButtons.dart';
-import 'package:provider/provider.dart';
 
 import '../../podo/User.dart';
-import '../../provider/TokenNotifier.dart';
-import '../profile.dart';
-import '../settings.dart';
+import '../settings/SettingsScreen.dart';
+import 'MainHomeScreen.dart';
+import 'MarketplaceScreen.dart';
+import 'MetamaskScreen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -56,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SettingsPage(
+                        builder: (context) => SettingsScreen(
                               user: user,
                             )));
                 String? userStr = await storage.read(key: "user");
@@ -105,177 +99,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
-
-class MainMarketplaceScreen extends StatelessWidget {
-  const MainMarketplaceScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text("Comming soon..."),
-    );
-  }
-}
-
-class MainHomeScreen extends StatelessWidget {
-  const MainHomeScreen({
-    Key? key,
-    required this.textTheme,
-    required this.colorScheme,
-    required this.themeData,
-    required this.user,
-  }) : super(key: key);
-
-  final TextTheme textTheme;
-  final ColorScheme colorScheme;
-  final ThemeData themeData;
-  final User? user;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        header(context, textTheme, colorScheme, themeData, user!),
-        Expanded(child: _tabSection(context, user!)),
-      ],
-    );
-  }
-}
-
-class MainMetamaskScreen extends StatelessWidget {
-  const MainMetamaskScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text("Comming soon..."),
-    );
-  }
-}
-
-Widget header(
-    BuildContext context, textTheme, colorScheme, themeData, User user) {
-  String userName = user.fullname!;
-  String name = userName.split(" ")[0];
-  String nameFirst = name[0].toUpperCase();
-  String nameRest = name.substring(1, name.length);
-  String surname = userName.split(" ")[1];
-  String surnameFirst = surname[0].toUpperCase();
-  String surnameRest = surname.substring(1, surname.length);
-  return Column(children: [
-    Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(nameFirst,
-            style: TextStyle(color: colorScheme.secondary, fontSize: 36)),
-        Text(nameRest, style: const TextStyle(fontSize: 36)),
-        Text(" $surnameFirst",
-            style: TextStyle(color: colorScheme.secondary, fontSize: 36)),
-        Text(surnameRest, style: const TextStyle(fontSize: 36)),
-      ],
-    ),
-    Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          user.totalAmount ?? "0.00",
-        ),
-        const Text(
-          "\$",
-        ),
-      ],
-    ),
-    Text(
-      'walletAddress',
-      style: textTheme.subtitle1,
-    ).tr(),
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: FittedBox(
-        fit: BoxFit.fitWidth,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              user.wallet!,
-              style: TextStyle(color: colorScheme.secondary),
-            ),
-            Consumer<TokenNotifier>(
-              builder: (context, notifier, child) => IconButton(
-                onPressed: (() async {
-                  await Clipboard.setData(ClipboardData(text: user.wallet!));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: const Text('clipboard').tr()));
-                }),
-                icon: const Icon(Icons.copy),
-                color: themeData.colorScheme.secondary.withAlpha(55),
-              ),
-            )
-          ],
-        ),
-      ),
-    ),
-    getButtons(context, user),
-    const SizedBox(
-      height: 24.0,
-    ),
-  ]);
-}
-
-Widget _tabSection(BuildContext context, User user) {
-  return DefaultTabController(
-    length: 2,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        DecoratedBox(
-          decoration: BoxDecoration(
-            //This is for background color
-            color: Colors.white.withOpacity(0.0),
-            //This is for bottom border that is needed
-            border: Border(
-                top: BorderSide(
-                    color: Theme.of(context).textTheme.bodyText1!.color!,
-                    width: 0.8)),
-          ),
-          child: TabBar(
-            unselectedLabelColor: Theme.of(context).textTheme.subtitle2?.color,
-            labelColor: Theme.of(context).colorScheme.secondary,
-            labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-            indicator: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Theme.of(context).colorScheme.secondary),
-              ),
-            ),
-            tabs: [
-              Tab(
-                text: "tokens".tr(),
-              ),
-              Tab(text: "nfts".tr()),
-            ],
-          ),
-        ),
-        Expanded(
-          child: SizedBox(
-            //Add this to give height
-            height: MediaQuery.of(context).size.height,
-            child: TabBarView(
-              children: [
-                tokensList(context, user),
-                nftGrid(context, user),
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }
