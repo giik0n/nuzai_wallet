@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:exomal_wallet/screens/home/widgets/BottomNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:nuzai_wallet/screens/home/widgets/EmptyListWidget.dart';
-import 'package:nuzai_wallet/screens/home/widgets/NftsGridWidger.dart';
-import 'package:nuzai_wallet/screens/home/widgets/TokenListWidget.dart';
-import 'package:nuzai_wallet/screens/home/widgets/TransactionButtons.dart';
+import 'package:exomal_wallet/screens/home/widgets/EmptyListWidget.dart';
+import 'package:exomal_wallet/screens/home/widgets/NftsGridWidger.dart';
+import 'package:exomal_wallet/screens/home/widgets/TokenListWidget.dart';
+import 'package:exomal_wallet/screens/home/widgets/TransactionButtons.dart';
 import 'package:provider/provider.dart';
 
 import '../../podo/User.dart';
@@ -25,6 +26,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   User? user;
 
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -34,6 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Container(
       child: Scaffold(
+        bottomNavigationBar: CustomBottomNavBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -64,6 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
             if (snapshot.data != null) {
               user = User.fromJson(jsonDecode(snapshot.data!));
             }
+            List<Widget> screens = [
+              MainMarketplaceScreen(),
+              MainHomeScreen(
+                  textTheme: textTheme,
+                  colorScheme: colorScheme,
+                  themeData: themeData,
+                  user: user),
+              MainMetamaskScreen()
+            ];
             return snapshot.hasData
                 ? Container(
                     decoration: Theme.of(context).brightness == Brightness.dark
@@ -76,20 +98,64 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Color.fromRGBO(8, 26, 52, 1)
                               ]))
                         : null,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        header(
-                            context, textTheme, colorScheme, themeData, user!),
-                        Expanded(child: _tabSection(context, user!)),
-                      ],
-                    ),
-                  )
+                    child: screens[_selectedIndex])
                 : const SizedBox.shrink();
           },
         ),
       ),
+    );
+  }
+}
+
+class MainMarketplaceScreen extends StatelessWidget {
+  const MainMarketplaceScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("Comming soon..."),
+    );
+  }
+}
+
+class MainHomeScreen extends StatelessWidget {
+  const MainHomeScreen({
+    Key? key,
+    required this.textTheme,
+    required this.colorScheme,
+    required this.themeData,
+    required this.user,
+  }) : super(key: key);
+
+  final TextTheme textTheme;
+  final ColorScheme colorScheme;
+  final ThemeData themeData;
+  final User? user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        header(context, textTheme, colorScheme, themeData, user!),
+        Expanded(child: _tabSection(context, user!)),
+      ],
+    );
+  }
+}
+
+class MainMetamaskScreen extends StatelessWidget {
+  const MainMetamaskScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("Comming soon..."),
     );
   }
 }

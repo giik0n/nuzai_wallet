@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
-import 'package:nuzai_wallet/podo/GasFee.dart';
-import 'package:nuzai_wallet/podo/TokenTransaction.dart';
+import 'package:exomal_wallet/podo/GasFee.dart';
+import 'package:exomal_wallet/podo/TokenTransaction.dart';
 
 import '../podo/NFT.dart';
 import '../podo/Token.dart';

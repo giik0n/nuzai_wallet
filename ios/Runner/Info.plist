@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Nuzai Wallet</string>
+	<string>Exomal Wallet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,9 +15,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Nuzai Wallet</string>
+	<string>Exomal Wallet</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>Exomal Wallet</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
@@ -54,10 +54,10 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSMotionUsageDescription</key>
-	<string>Nuzai wallet need motion access to work with AR view</string>
+	<string>Exomal wallet need motion access to work with AR view</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-    	<string>Nuzai wallet need location access to work with AR view</string>
+    	<string>Exomal wallet need location access to work with AR view</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
-        <string>Nuzai wallet need bluetooth access to work with AR view</string>
+        <string>Exomal wallet need bluetooth access to work with AR view</string>
 </dict>
 </plist>

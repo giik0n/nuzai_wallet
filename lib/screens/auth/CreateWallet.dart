@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:nuzai_wallet/config/LocalAuthApi.dart';
-import 'package:nuzai_wallet/provider/MnemonicNotifier.dart';
+import 'package:exomal_wallet/config/LocalAuthApi.dart';
+import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visibility_aware_state/visibility_aware_state.dart';
@@ -81,9 +81,7 @@ class _ImportMnemonicState extends State<ImportMnemonic> {
               onPressed: () async {
                 print("saving...");
                 if (validateMnemonic(mnemonicPhrase)) {
-                  await FlutterKeychain.put(
-                      key: "mnemonic", value: mnemonicPhrase);
-                  mnemonicNotifier.setMnemonic(mnemonicPhrase);
+                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Error".tr()),
@@ -158,10 +156,7 @@ class _GenerateMnemonicState extends State<GenerateMnemonic> {
               onPressed: () async {
                 print("saving...");
                 if (validateMnemonic(mnemonicPhrase)) {
-                  await FlutterKeychain.put(
-                      key: "mnemonic", value: mnemonicPhrase);
-                  print(mnemonicPhrase);
-                  mnemonicNotifier.setMnemonic(mnemonicPhrase);
+                  await mnemonicNotifier.saveMnemonic(mnemonicPhrase);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("Error".tr()),
@@ -248,7 +243,10 @@ class _CreateWalletState extends State<CreateWallet> {
                       children: <Widget>[
                         Image.asset(
                           'assets/icons/Logo.png',
-                          scale: 1.5,
+                          scale: 4,
+                        ),
+                        SizedBox(
+                          height: 20,
                         ),
                         RichText(
                           text: TextSpan(
@@ -257,10 +255,10 @@ class _CreateWalletState extends State<CreateWallet> {
                             children: [
                               const TextSpan(text: "Join "),
                               TextSpan(
-                                  text: "N",
+                                  text: "E",
                                   style:
                                       TextStyle(color: colorScheme.secondary)),
-                              const TextSpan(text: "uzai wallet"),
+                              const TextSpan(text: "xomal wallet"),
                             ],
                           ),
                         ),

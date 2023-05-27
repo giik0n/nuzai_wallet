@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "nuzai_wallet",
+            "name": "exomal_wallet",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "nuzai_wallet (profile mode)",
+            "name": "exomal_wallet (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "nuzai_wallet (release mode)",
+            "name": "exomal_wallet (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

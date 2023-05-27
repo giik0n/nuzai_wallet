@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:nuzai_wallet/podo/Token.dart';
-import 'package:nuzai_wallet/podo/User.dart';
-import 'package:nuzai_wallet/screens/TokenTransactionsScreen.dart';
-import 'package:nuzai_wallet/screens/home/widgets/EmptyListWidget.dart';
-import 'package:nuzai_wallet/service/RestClient.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/podo/Token.dart';
+import 'package:exomal_wallet/podo/User.dart';
+import 'package:exomal_wallet/screens/TokenTransactionsScreen.dart';
+import 'package:exomal_wallet/screens/home/widgets/EmptyListWidget.dart';
+import 'package:exomal_wallet/service/RestClient.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 Widget tokensList(BuildContext context, User user) {
   List<Token> tokens = [];

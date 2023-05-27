@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:nuzai_wallet/podo/Token.dart';
-import 'package:nuzai_wallet/podo/TokenTransaction.dart';
-import 'package:nuzai_wallet/podo/User.dart';
-import 'package:nuzai_wallet/screens/home/widgets/TransactionButtons.dart';
-import 'package:nuzai_wallet/service/RestClient.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/podo/Token.dart';
+import 'package:exomal_wallet/podo/TokenTransaction.dart';
+import 'package:exomal_wallet/podo/User.dart';
+import 'package:exomal_wallet/screens/home/widgets/TransactionButtons.dart';
+import 'package:exomal_wallet/service/RestClient.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 class TokenTransactionsScreen extends StatefulWidget {
   final Token token;

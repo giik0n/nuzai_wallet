@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nuzai_wallet/podo/User.dart';
-import 'package:nuzai_wallet/screens/home/SendTokensPage.dart';
+import 'package:exomal_wallet/podo/User.dart';
+import 'package:exomal_wallet/screens/home/SendTokensPage.dart';
 import 'package:provider/provider.dart';
 
 import '../../../provider/MnemonicNotifier.dart';

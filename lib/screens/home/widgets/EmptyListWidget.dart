@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 Widget emptyList(String type, BuildContext context) {
   return Column(

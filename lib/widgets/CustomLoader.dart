@@ -8,8 +8,11 @@ class CustomLoader extends StatefulWidget {
   State<CustomLoader> createState() => _CustomLoaderState();
 }
 
-class _CustomLoaderState extends State<CustomLoader> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
+class _CustomLoaderState extends State<CustomLoader>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2))
+        ..repeat();
 
   @override
   void dispose() {
@@ -19,7 +22,7 @@ class _CustomLoaderState extends State<CustomLoader> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return Center(
       child: AnimatedBuilder(
         animation: _controller,
         builder: (_, child) {
@@ -29,8 +32,8 @@ class _CustomLoaderState extends State<CustomLoader> with SingleTickerProviderSt
           );
         },
         child: Image.asset(
-          "assets/icons/no_nfts.png",
-          scale: 1.5,
+          "assets/icons/loading.png",
+          scale: 1,
         ),
       ),
     );

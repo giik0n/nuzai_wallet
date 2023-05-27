@@ -42,7 +42,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
           // ),
           ARView(
         onARViewCreated: onARViewCreated,
-        planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+        planeDetectionConfig: PlaneDetectionConfig.horizontal,
       ),
     );
   }
@@ -108,11 +108,11 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
       if (didAddAnchor!) {
         this.anchors.add(newAnchor);
         // Add note to anchor
+
         var newNode = ARNode(
-            type: NodeType.webGLB,
-            uri: widget.ipfsUrl ??
-                "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-            scale: vector.Vector3(0.2, 0.2, 0.2),
+            type: NodeType.localGLTF2,
+            uri: widget.ipfsUrl ?? "assets/models/tiger.gltf",
+            scale: vector.Vector3(1.2, 1.2, 1.2),
             position: vector.Vector3(0.0, 0.0, 0.0),
             rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor =

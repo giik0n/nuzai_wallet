@@ -1,6 +1,6 @@
-# nuzai_wallet
+# exomal_wallet
 
-Nuzai Wallet
+Exomal Wallet
 
 ## Getting Started
 

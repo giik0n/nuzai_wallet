@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:nuzai_wallet/provider/MnemonicNotifier.dart';
-import 'package:nuzai_wallet/provider/TokenNotifier.dart';
-import 'package:nuzai_wallet/screens/auth/CreateWallet.dart';
-import 'package:nuzai_wallet/theme/theme_constants.dart';
+import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
+import 'package:exomal_wallet/provider/TokenNotifier.dart';
+import 'package:exomal_wallet/screens/auth/CreateWallet.dart';
+import 'package:exomal_wallet/theme/theme_constants.dart';
+import 'package:exomal_wallet/provider/TokenNotifier.dart';
+import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
+import 'package:exomal_wallet/theme/theme_constants.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/auth/join.dart';
@@ -36,7 +39,7 @@ class Wrapper extends StatelessWidget {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          title: 'Nuzai Wallet',
+          title: 'Exomal Wallet',
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: ThemeMode.system,
@@ -62,7 +65,7 @@ class _MyAppState extends State<MyApp> {
             ? Consumer<MnemonicNotifier>(
                 builder: (context, MnemonicNotifier mnemonicNotifier, child) {
                 print(
-                    "Mnemonic:" + (mnemonicNotifier.token.isEmpty).toString());
+                    "Mnemonic:" + (!mnemonicNotifier.token.isEmpty).toString());
                 return mnemonicNotifier.token.isEmpty
                     ? CreateWallet()
                     : MyHomePage();

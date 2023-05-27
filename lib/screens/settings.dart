@@ -8,11 +8,11 @@ import 'package:flutter_keychain/flutter_keychain.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:nuzai_wallet/config/LocalAuthApi.dart';
-import 'package:nuzai_wallet/podo/User.dart';
-import 'package:nuzai_wallet/provider/TokenNotifier.dart';
-import 'package:nuzai_wallet/service/RestClient.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/config/LocalAuthApi.dart';
+import 'package:exomal_wallet/podo/User.dart';
+import 'package:exomal_wallet/provider/TokenNotifier.dart';
+import 'package:exomal_wallet/service/RestClient.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,10 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     actions: [
                       IconButton(
                         onPressed: () async {
-                          await FlutterKeychain.remove(key: "mnemonic");
-                          await FlutterKeychain.clear();
                           await tokenNotifier!.setToken("");
-                          mnemonicNotifier.setMnemonic("");
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.logout),

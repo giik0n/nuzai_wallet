@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nuzai_wallet/podo/NFT.dart';
-import 'package:nuzai_wallet/screens/ar/ArCoreViewScreen.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/podo/NFT.dart';
+import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 class NftPage extends StatefulWidget {
   final NFT nft;

@@ -14,21 +14,15 @@ class MnemonicNotifier extends ChangeNotifier {
     initMnemonic();
   }
 
-  setMnemonic(String newToken) {
-    _token = newToken;
-    FlutterKeychain.put(key: key, value: _token);
+  saveMnemonic(String token) {
+    _token = token;
+    FlutterSecureStorage().write(key: key, value: token);
     print("Mnemonic saved");
     notifyListeners();
   }
 
   initMnemonic() async {
-    _token = await FlutterKeychain.get(key: key) ?? "";
+    _token = await FlutterSecureStorage().read(key: key) ?? "";
     notifyListeners();
-  }
-
-  logOut() {
-    _token = "";
-    notifyListeners();
-    FlutterKeychain.put(key: key, value: "");
   }
 }

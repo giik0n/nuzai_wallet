@@ -14,11 +14,12 @@ class TokenNotifier extends ChangeNotifier {
     initToken();
   }
 
-  setToken(String newToken){
+  setToken(String newToken) {
     _token = newToken;
     _storage.write(key: "token", value: newToken);
-    newToken == "" ? null :Timer.periodic(const Duration(minutes: 1000), (_) => logOut());
-    print(_token);
+    newToken == ""
+        ? null
+        : Timer.periodic(const Duration(minutes: 1000), (_) => logOut());
     notifyListeners();
   }
 
@@ -27,9 +28,9 @@ class TokenNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  logOut()  {
+  logOut() {
     _token = "";
     notifyListeners();
-     _storage.write(key: "token", value: "");
+    _storage.write(key: "token", value: "");
   }
 }

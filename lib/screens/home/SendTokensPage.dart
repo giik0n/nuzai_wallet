@@ -2,11 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:nuzai_wallet/podo/Token.dart';
-import 'package:nuzai_wallet/podo/User.dart';
-import 'package:nuzai_wallet/screens/home/widgets/QrScanner.dart';
-import 'package:nuzai_wallet/service/RestClient.dart';
-import 'package:nuzai_wallet/widgets/CustomLoader.dart';
+import 'package:exomal_wallet/podo/Token.dart';
+import 'package:exomal_wallet/podo/User.dart';
+import 'package:exomal_wallet/screens/home/widgets/QrScanner.dart';
+import 'package:exomal_wallet/service/RestClient.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 import '../../podo/GasFee.dart';
 

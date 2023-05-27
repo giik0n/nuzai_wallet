@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keychain/flutter_keychain.dart';
-import 'package:nuzai_wallet/config/LocalAuthApi.dart';
+import 'package:exomal_wallet/config/LocalAuthApi.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visibility_aware_state/visibility_aware_state.dart';

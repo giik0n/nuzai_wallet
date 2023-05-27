@@ -1,4 +1,4 @@
-package com.alexpan.nuzai_wallet;
+package io.exomal.exomal_wallet;
 
 import io.flutter.embedding.android.FlutterFragmentActivity;
 

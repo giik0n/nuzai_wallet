@@ -1,5 +1,5 @@
-name: nuzai_wallet
-description: Nuzai Wallet
+name: exomal_wallet
+description: Exomal Wallet
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -50,6 +50,8 @@ dependencies:
   flutter_launcher_icons: "^0.10.0"
   flutter_app_name: ^0.1.0
   mnemonic: ^1.0.0
+  change_app_package_name: ^1.1.0
+  # flutter pub run change_app_package_name:main com.new.package.name
   # arcore_flutter_plugin:
   #   git:
   #     url: https://github.com/KARIM2M/arcore_flutter_plugin.git
@@ -71,7 +73,7 @@ flutter_icons:
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter_app_name:
-  name: "Nuzai Wallet"
+  name: "Exomal Wallet"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -96,7 +98,7 @@ flutter:
      - assets/icons/Logo.png
      - assets/icons/google.png
      - assets/icons/facebook.png
-     - assets/icons/no_nfts.png
+     - assets/icons/loading.png
      - assets/icons/receive.png
      - assets/icons/send.png
      - assets/icons/eye_icon.png
@@ -104,9 +106,15 @@ flutter:
      - assets/icons/received_transaction.png
      - assets/icons/triangle.png
      - assets/icons/settings.png
+     - assets/icons/metamask_icon.png
 
      - assets/translations/en.json
      - assets/translations/ru.json
+
+    #  - assets/models/exomal.gltf
+    #  - assets/models/exomal_blue.gltf
+    #  - assets/models/exomal_red_embedded.gltf
+    #  - assets/models/tiger.gltf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -124,6 +132,11 @@ flutter:
        fonts:
          - asset: assets/fonts/Montserrat-SemiBold.ttf
            weight: 700
+     - family: Fredoka
+       fonts:
+         - asset: assets/fonts/Fredoka.ttf
+
+        
 
   #
   # For details regarding fonts from package dependencies,
