@@ -178,9 +178,9 @@ class _LoginFormState extends State<LoginForm> {
           await RestClient.auth(emailController.text, passController.text);
     }
     if (response != null) {
+      Navigator.pop(context);
       checkResponse(response, notifier);
     }
-    Navigator.pop(context);
   }
 
   void checkResponse(http.Response response, TokenNotifier notifier) async {
