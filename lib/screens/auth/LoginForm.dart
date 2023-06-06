@@ -196,6 +196,7 @@ class _LoginFormState extends State<LoginForm> {
       user.wallet = credentials.address.hex;
       await storage.write(key: "user", value: jsonEncode(user));
       notifier.setToken(user.token ?? "");
+      print(user.token);
       emailController.text = "";
       passController.text = "";
     } else {

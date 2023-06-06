@@ -40,7 +40,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
         return snapshot.hasData
             ? Scaffold(
                 appBar: AppBar(
-                  iconTheme: Theme.of(context).iconTheme,
+                    iconTheme: Theme.of(context).iconTheme,
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     title: const Text("sendTokens").tr(),
@@ -83,11 +83,11 @@ class _SendTokensPageState extends State<SendTokensPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
                         child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                            border: InputBorder.none
-                          ),
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "noSelectedToken".tr();
@@ -117,8 +117,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                     border: InputBorder.none,
-                                  hintText: "0.0000123"
-                                ),
+                                    hintText: "0.0000123"),
                                 validator: (value) {
                                   if (value == null ||
                                       value.isEmpty ||
@@ -173,7 +172,7 @@ class _SendTokensPageState extends State<SendTokensPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text("estimatedGasFee".tr()),
-                                         Text(
+                                        Text(
                                           "$totalGasFee BNB",
                                           style: TextStyle(color: Colors.blue),
                                         )
@@ -237,9 +236,10 @@ class _SendTokensPageState extends State<SendTokensPage> {
     );
     return result;
   }
+
   Future<bool> loadFutures() async {
-    tokens = await RestClient.loadTokens(
-        widget.user.token!, widget.user.defaultNetwork!, widget.user.wallet!);
+    tokens =
+        await RestClient.loadTokens(widget.user.token!, widget.user.wallet!);
     gasFee = await RestClient.getGasFee();
     totalGasFee = gasFee.gasPrice! * gasFee.gasLimit! / 1000000000;
     return true;

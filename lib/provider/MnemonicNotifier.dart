@@ -1,9 +1,8 @@
 import 'dart:convert';
 
+import 'package:exomal_wallet/service/RPCService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mnemonic/mnemonic.dart';
-import 'package:web3dart/web3dart.dart';
 import '../podo/User.dart';
 
 class MnemonicNotifier extends ChangeNotifier {
@@ -13,15 +12,12 @@ class MnemonicNotifier extends ChangeNotifier {
   String get mnemonic => _mnemonic;
   MnemonicNotifier() {
     initMnemonic();
-    print("Mnemonic init");
   }
 
   saveMnemonic(String token, User user) async {
     _mnemonic = token;
-    _storage.write(key: key + (user.email ?? ""), value: token);
-
-    Credentials credentials = EthPrivateKey.fromHex(mnemonicToEntropy(token));
-    user.wallet = credentials.address.hex;
+    await _storage.write(key: key + (user.email ?? ""), value: token);
+    user.wallet = await RPCService.getMyAddressHex(user.email ?? "");
     _storage.write(key: "user", value: jsonEncode(user));
     notifyListeners();
   }

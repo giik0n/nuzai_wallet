@@ -10,8 +10,7 @@ import 'package:exomal_wallet/widgets/CustomLoader.dart';
 Widget tokensList(BuildContext context, User user) {
   List<Token> tokens = [];
   return FutureBuilder(
-    future:
-        RestClient.loadTokens(user.token!, user.defaultNetwork!, user.wallet!),
+    future: RestClient.loadTokens(user.token!, user.wallet!),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
         tokens = snapshot.data!;

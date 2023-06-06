@@ -54,7 +54,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
 
     this.arSessionManager?.onInitialize(
           showFeaturePoints: false,
-          showPlanes: false,
+          showPlanes: true,
           customPlaneTexturePath: "assets/icons/triangle.png",
           handlePans: true,
           handleRotation: true,
@@ -108,13 +108,14 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
           type: NodeType.webGLB,
           uri: widget.ipfsUrl ??
               "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-          scale: vector.Vector3(1.2, 1.2, 1.2),
+          scale: vector.Vector3(0.2, 0.2, 0.2),
           position: vector.Vector3(0.0, 0.0, 0.0),
           rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
       bool? didAddNodeToAnchor =
           await arObjectManager?.addNode(newNode, planeAnchor: newAnchor);
       if (didAddNodeToAnchor!) {
         nodes.add(newNode);
+        print("Added on scene");
       } else {
         arSessionManager?.onError("Adding Node to Anchor failed");
       }
