@@ -199,7 +199,7 @@ class _LoginFormState extends State<LoginForm> {
       emailController.text = "";
       passController.text = "";
     } else {
-      showErrorDialog(context, response.body);
+      showErrorDialog(context, response.statusCode.toString());
     }
   }
 }

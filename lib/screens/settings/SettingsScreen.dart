@@ -184,15 +184,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    ListTile(
-                                        tileColor: Colors.transparent,
-                                        onTap: () =>
-                                            selectNetworkDialog(user, context),
-                                        title: const Text("network").tr(),
-                                        trailing: const Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.transparent,
-                                        )),
+                                    // ListTile(
+                                    //     tileColor: Colors.transparent,
+                                    //     onTap: () =>
+                                    //         selectNetworkDialog(user, context),
+                                    //     title: const Text("network").tr(),
+                                    //     trailing: const Icon(
+                                    //       Icons.arrow_forward_ios,
+                                    //       color: Colors.transparent,
+                                    //     )),
                                     avaliableTypes!.contains(
                                                 BiometricType.fingerprint) ||
                                             avaliableTypes!
