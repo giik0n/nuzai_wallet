@@ -1,11 +1,12 @@
+import 'package:exomal_wallet/service/RestClient.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:mnemonic/mnemonic.dart';
 import 'package:web3dart/web3dart.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
-const String mainUrl = "https://api.nuzai.network/api/v2/";
-const String usersSubUrl = "users/";
-const String balanceSubUrl = "balance/";
 final String key = "mnemonic";
+final String apiUrl = "https://bsc-dataseed.binance.org/";
 
 class RPCService {
   static Future<String> getMyAddressHex(String email) async {
@@ -17,109 +18,74 @@ class RPCService {
     return credentials.address.hex;
   }
 
-  // static Future<Response> getCode(String email) {
-  //   return get(Uri.parse("http://134.209.240.201/api/v2/users/sendcode/$email"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //       });
-  // }
+  static Future<String> sendBNBTokens(
+      String email, String to, double doubleAmount) async {
+    final httpClient = Client();
+    final FlutterSecureStorage _storage = const FlutterSecureStorage();
+    String? _mnemonic = await _storage.read(key: key + (email)) ?? "";
 
-  // static Future<Response> verifyCode(String email, String code) {
-  //   return get(Uri.parse("http://134.209.240.201/api/v2/users/verify/$email/code/$code"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //       });
-  // }
+    Credentials credentials =
+        EthPrivateKey.fromHex(mnemonicToEntropy(_mnemonic));
+    var ethClient = Web3Client(apiUrl, httpClient);
 
-  // static Future<Response> register(String email, String password, String fullname) async {
-  //   return await post(Uri.parse("http://134.209.240.201/api/v2/users/register"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json"
-  //       },
-  //       body: json.encode({"email": email, "password": password, "fullname": fullname}));
-  // }
+    final amount = BigInt.from(1000000000000000000 * doubleAmount);
 
-  // static Future<Response> registerSocial(String email, String password, String fullname, String socialNetwork) async {
-  //   return await post(Uri.parse("http://134.209.240.201/api/v2/users/social_register"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json"
-  //       },
-  //       body: json.encode({"email": email, "password": password, "fullname": fullname, "socialId": socialNetwork}));
-  // }
+    final gasPrice = EtherAmount.inWei(BigInt.from(21 * 1000000000));
 
-  // static Future<Response> sendTokens(String jwt, int id, String to, String amount, String ticker) async {
-  //   return await post(Uri.parse("http://134.209.240.201/api/v2/balance/signtransaction/$id"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //         'Authorization': 'Bearer $jwt',
-  //       },
-  //       body: json.encode({"to": to, "amount": amount, "ticker":ticker}));
-  // }
+    final txHash = await ethClient.sendTransaction(
+        credentials,
+        Transaction(
+          to: EthereumAddress.fromHex(to),
+          gasPrice: gasPrice,
+          maxGas: 50000,
+          value: EtherAmount.inWei(amount),
+        ),
+        chainId: 56);
+    return txHash;
+  }
 
-  // static Future<List<Token>> loadTokens(String jwt, int defaultNetwork, String wallet) async{
-  //   var response = await get(Uri.parse("http://134.209.240.201/api/v2/balance/tokens/$defaultNetwork/wallet/$wallet"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //         'Authorization': 'Bearer $jwt',
-  //       });
-  //   Iterable l = json.decode(response.body);
-  //   return List<Token>.from(l.map((model) => Token.fromJson(model)));
-  // }
+  static Future<String> loadAsset(String assetName) async {
+    return await rootBundle.loadString('assets/' + assetName);
+  }
 
-  // static Future<GasFee> getGasFee() async{
-  //   var response = await get(Uri.parse("http://134.209.240.201/api/v2/balance/getgasfee"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //       });
-  //   return GasFee.fromJson(jsonDecode(response.body));
-  // }
+  static Future<String> sendEXMLTokens(
+      String email, String to, double doubleAmount) async {
+    final httpClient = Client();
+    final ethClient = Web3Client(apiUrl, httpClient);
+    final FlutterSecureStorage _storage = const FlutterSecureStorage();
+    String? _mnemonic = await _storage.read(key: key + (email)) ?? "";
 
-  // static Future<User> getUserById(int id, String jwt) async{
-  //   var response = await get(Uri.parse("http://134.209.240.201/api/v2/users/getbyid/$id"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //       'Authorization': 'Bearer $jwt',
-  //       });
-  //   return User.fromJson(jsonDecode(response.body));
-  // }
+    final contractABI = await loadAsset('abi/exomal-abi.json');
+    final contractAddress =
+        EthereumAddress.fromHex('0x248731d4d8583753C1CfcfCFC765b9A3b885513f');
 
-  // static Future<List<NFT>> loadNFTs(String jwt,String wallet) async{
-  //   var response = await get(Uri.parse("http://134.209.240.201/api/v2/balance/nfts/$wallet"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //         'Authorization': 'Bearer $jwt',
-  //       });
-  //   Iterable l = json.decode(response.body);
-  //   return List<NFT>.from(l.map((model) => NFT.fromJson(model)));
-  // }
+    Credentials credentials =
+        EthPrivateKey.fromHex(mnemonicToEntropy(_mnemonic));
 
-  // static Future<List<TokenTransaction>> loadTokenTransactions(String jwt,String wallet, String ticker) async{
-  //   var response = await get(Uri.parse("http://134.209.240.201/api/v2/balance/gettransactions/$wallet/ticker/$ticker"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //         'Authorization': 'Bearer $jwt',
-  //       });
-  //   Iterable l = json.decode(response.body);
-  //   return List<TokenTransaction>.from(l.map((model) => TokenTransaction.fromJson(model)));
-  // }
+    final contract = DeployedContract(
+      ContractAbi.fromJson(contractABI, 'Exomal'),
+      contractAddress,
+    );
 
-  // static Future<Response> editUser(String jwt, int id, String key, String value) async {
-  //   return await put(Uri.parse("http://134.209.240.201//api/v2/users/edit/$id"),
-  //       headers: {
-  //         "accept": "text/plain",
-  //         "Content-Type": "application/json-patch+json",
-  //         'Authorization': 'Bearer $jwt',
-  //       },
-  //       body: json.encode({key: value}));
-  // }
+    final recipientAddress = EthereumAddress.fromHex(to);
+    final gasPrice = EtherAmount.inWei(BigInt.from(21 * 1000000000));
+
+    final amount =
+        BigInt.from(1000000000000000000 * doubleAmount); // Amount in wei
+
+    final function = contract.function('transfer');
+    final transaction = Transaction.callContract(
+      gasPrice: gasPrice,
+      maxGas: 100000,
+      contract: contract,
+      function: function,
+      parameters: [recipientAddress, amount],
+    );
+    print("Private address:" + credentials.address.hex);
+    print(EthPrivateKey.fromHex(mnemonicToEntropy(_mnemonic)).privateKeyInt);
+    print("seed" + _mnemonic);
+    final txHash =
+        await ethClient.sendTransaction(credentials, transaction, chainId: 56);
+    return txHash;
+  }
 }

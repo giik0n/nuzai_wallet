@@ -51,6 +51,8 @@ dependencies:
   flutter_app_name: ^0.1.0
   mnemonic: ^1.0.0
   change_app_package_name: ^1.1.0
+  bip39: ^1.0.6
+  bip32: ^2.0.0
   # flutter pub run change_app_package_name:main com.new.package.name
   # arcore_flutter_plugin:
   #   git:
@@ -111,6 +113,9 @@ flutter:
 
      - assets/translations/en.json
      - assets/translations/ru.json
+
+
+     - assets/abi/exomal-abi.json
 
     #  - assets/models/exomal.gltf
     #  - assets/models/exomal_blue.gltf

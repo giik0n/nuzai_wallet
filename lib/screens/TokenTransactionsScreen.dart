@@ -32,28 +32,6 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
           user.token!, user.wallet!, token.ticker!),
       builder: (context, snapshot) {
         if (snapshot.hasData) transactions = snapshot.data!;
-        //
-        // if (transactions.isEmpty) {
-        //   transactions.add(TokenTransaction(
-        //       id: "1",
-        //       transactionHash: "vghfbjk",
-        //       from: "dodik@gmail.com",
-        //       to: "nuzai.test@gmail.com",
-        //       amount: "1",
-        //       transactionTime: "Feb 8 at 7:23 am",
-        //       status: 0,
-        //       ticker: token.ticker!));
-        //   transactions.add(TokenTransaction(
-        //       id: "1",
-        //       transactionHash: "vghfbjk",
-        //       from: "nuzai.test@gmail.com",
-        //       to: "dodik@gmail.com",
-        //       amount: "1",
-        //       transactionTime: "Feb 8 at 7:23 am",
-        //       status: 0,
-        //       ticker: token.ticker!));
-        // }
-
         return Scaffold(
           appBar: AppBar(
             iconTheme: Theme.of(context).iconTheme,
@@ -91,7 +69,7 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                             (index) {
                               TokenTransaction transaction =
                                   transactions[index];
-                              bool isReceived = transaction.to! == user.email!;
+                              bool isReceived = transaction.to! == user.wallet!;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -111,7 +89,7 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                                       title: Text(
                                           "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
                                       subtitle: Text(
-                                        transaction.status == 0
+                                        transaction.status! > 12
                                             ? "Confirmed"
                                             : "Pending",
                                         style: const TextStyle(

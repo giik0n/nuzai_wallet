@@ -91,14 +91,16 @@ class RestClient {
     return List<Token>.from(l.map((model) => Token.fromJson(model)));
   }
 
-  static Future<GasFee> getGasFee() async {
+  static Future<String?> getGasFee() async {
     var response = await get(
-        Uri.parse("http://134.209.240.201/api/v2/balance/getgasfee"),
+        Uri.parse(
+            "https://api.bscscan.com/api?module=proxy&action=eth_gasPrice"),
         headers: {
           "accept": "text/plain",
           "Content-Type": "application/json-patch+json",
         });
-    return GasFee.fromJson(jsonDecode(response.body));
+    var result = GasFee.fromJson(jsonDecode(response.body)).result!;
+    return result.contains("Max rate limit reached") ? null : result;
   }
 
   static Future<User> getUserById(int id, String jwt) async {
@@ -141,7 +143,7 @@ class RestClient {
 
   static Future<Response> editUser(
       String jwt, int id, String key, String value) async {
-    return await put(Uri.parse("http://134.209.240.201//api/v2/users/edit/$id"),
+    return await put(Uri.parse("http://134.209.240.201/api/v2/users/edit/$id"),
         headers: {
           "accept": "text/plain",
           "Content-Type": "application/json-patch+json",

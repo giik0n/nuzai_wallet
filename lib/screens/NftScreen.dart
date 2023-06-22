@@ -37,9 +37,7 @@ class _NftScreenState extends State<NftScreen> {
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
                       nft.image!,
-                      height: 250,
-                      width: 175,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent? loadingProgress) {
                         if (loadingProgress == null) {
@@ -63,9 +61,7 @@ class _NftScreenState extends State<NftScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ArCoreViewScreen(
-                                    nft.fileExtension == "glb"
-                                        ? nft.ipfsUlrl
-                                        : null)),
+                                    nft.extension == "glb" ? nft.model : null)),
                           );
                         },
                         child: Row(
