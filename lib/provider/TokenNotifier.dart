@@ -10,7 +10,6 @@ class TokenNotifier extends ChangeNotifier {
   String get token => _token;
   TokenNotifier() {
     initToken();
-    print("Token init");
   }
 
   setToken(String newToken) {

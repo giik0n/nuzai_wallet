@@ -20,18 +20,23 @@ class MnemonicNotifier extends ChangeNotifier {
     user.wallet = await RPCService.getMyAddressHex(user.email ?? "");
     _storage.write(key: "user", value: jsonEncode(user));
     notifyListeners();
+    print(user);
+    print("saved mnemonic");
   }
 
   initMnemonic() async {
-    String? userStr = await FlutterSecureStorage().read(key: "user");
-    User user = User.fromJson(jsonDecode(userStr!));
-    _mnemonic = await _storage.read(key: key + (user.email ?? "")) ?? "";
-    notifyListeners();
+    print("Init mnemonic");
+    String? email = await FlutterSecureStorage().read(key: "email");
+
+    if (email != null) {
+      _mnemonic = await _storage.read(key: key + (email)) ?? "";
+      notifyListeners();
+    }
   }
 
   logOut(User user) {
     _mnemonic = "";
-    notifyListeners();
     saveMnemonic("", user);
+    notifyListeners();
   }
 }

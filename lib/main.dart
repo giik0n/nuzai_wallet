@@ -56,30 +56,37 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<TokenNotifier>(
-      builder: (context, TokenNotifier notifier, child) {
-        return notifier.token.isNotEmpty
-            ? Consumer<MnemonicNotifier>(
-                builder: (context, MnemonicNotifier mnemonicNotifier, child) {
-                print("Mnemonic:" +
-                    (!mnemonicNotifier.mnemonic.isEmpty).toString());
-                return mnemonicNotifier.mnemonic.isEmpty
-                    ? CreateWallet()
-                    : FutureBuilder(
-                        future: LocalAuthApi.authenticate(),
-                        builder: ((context, snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data == true) {
-                              return MyHomePage();
-                            } else {
-                              return CreateWallet();
-                            }
-                          }
-                          return SizedBox.shrink();
-                        }));
-              })
-            : const JoinPage();
-      },
-    );
+    LocalAuthApi localAuthApi = new LocalAuthApi();
+    return FutureBuilder(
+        future: localAuthApi.getAvailableBiometrics(),
+        builder: (context, snapshot) {
+          return Consumer<TokenNotifier>(
+            builder: (context, TokenNotifier notifier, child) {
+              return notifier.token.isNotEmpty
+                  ? Consumer<MnemonicNotifier>(builder:
+                      (context, MnemonicNotifier mnemonicNotifier, child) {
+                      print("Mnemonic:" +
+                          (!mnemonicNotifier.mnemonic.isEmpty).toString());
+                      return mnemonicNotifier.mnemonic.isEmpty
+                          ? CreateWallet()
+                          : (snapshot.data != null && snapshot.data!.length > 0
+                              ? FutureBuilder(
+                                  future: LocalAuthApi.authenticate(),
+                                  builder: ((context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      if (snapshot.data == true) {
+                                        return MyHomePage();
+                                      } else {
+                                        return CreateWallet();
+                                      }
+                                    }
+                                    return SizedBox.shrink();
+                                  }))
+                              : MyHomePage());
+                    })
+                  : const JoinPage();
+            },
+          );
+        });
   }
 }

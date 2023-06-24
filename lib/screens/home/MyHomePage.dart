@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../podo/User.dart';
+import '../../service/RPCService.dart';
 import '../settings/SettingsScreen.dart';
 import 'MainHomeScreen.dart';
 import 'MarketplaceScreen.dart';
@@ -66,10 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         body: FutureBuilder(
-          future: storage.read(key: "user"),
+          future: loadUser(),
           builder: (builder, snapshot) {
             if (snapshot.data != null) {
-              user = User.fromJson(jsonDecode(snapshot.data!));
+              user = snapshot.data!;
+              print(user!.toJson());
             }
             List<Widget> screens = [
               MainMarketplaceScreen(),
@@ -99,4 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+Future<User> loadUser() async {
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+  var usrString = await storage.read(key: "user") ?? "";
+  User user = User.fromJson(jsonDecode(usrString));
+  user.wallet = await RPCService.getMyAddressHex(user.email ?? "");
+  return user;
 }

@@ -185,16 +185,15 @@ class _LoginFormState extends State<LoginForm> {
 
   void checkResponse(http.Response response, TokenNotifier notifier) async {
     if (response.statusCode == 200) {
-      User user = User.fromJson(json.decode(response.body)["bodyResponse"]);
       FlutterSecureStorage storage = const FlutterSecureStorage();
+
+      User user = User.fromJson(json.decode(response.body)["bodyResponse"]);
+      await storage.write(key: "user", value: jsonEncode(user));
+
+      print(user.toJson());
       storage.write(key: "email", value: emailController.text);
       storage.write(key: "password", value: passController.text);
-      String? mnemonic =
-          await storage.read(key: "mnemonic" + (emailController.text)) ?? "";
-      Credentials credentials =
-          EthPrivateKey.fromHex(mnemonicToEntropy(mnemonic));
-      user.wallet = credentials.address.hex;
-      await storage.write(key: "user", value: jsonEncode(user));
+
       notifier.setToken(user.token ?? "");
       print(user.token);
       emailController.text = "";

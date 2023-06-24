@@ -63,57 +63,62 @@ class _TokenTransactionsScreenState extends State<TokenTransactionsScreen> {
                       )
                     : Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: List.generate(
-                            transactions.length,
-                            (index) {
-                              TokenTransaction transaction =
-                                  transactions[index];
-                              bool isReceived = transaction.to! == user.wallet!;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: Text(transaction.transactionTime!),
-                                  ),
-                                  ListTile(
-                                      leading: Image.asset(
-                                          isReceived
-                                              ? "assets/icons/received_transaction.png"
-                                              : "assets/icons/sent_transaction.png",
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1
-                                              ?.color),
-                                      title: Text(
-                                          "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
-                                      subtitle: Text(
-                                        transaction.status! > 12
-                                            ? "Confirmed"
-                                            : "Pending",
-                                        style: const TextStyle(
-                                            color: Colors.green),
-                                      ).tr(),
-                                      trailing: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                              "${transaction.amount!} ${transaction.ticker!}"),
-                                          Text(
-                                            "\$${transaction.amount!}",
-                                            style:
-                                                themeData.textTheme.bodySmall,
-                                          )
-                                        ],
-                                      ),
-                                      tileColor: Colors.transparent),
-                                ],
-                              );
-                            },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: ListView(
+                            children: List.generate(
+                              transactions.length,
+                              (index) {
+                                TokenTransaction transaction =
+                                    transactions[index];
+                                bool isReceived =
+                                    transaction.to! == user.wallet!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 16.0),
+                                      child: Text(transaction.transactionTime!),
+                                    ),
+                                    ListTile(
+                                        leading: Image.asset(
+                                            isReceived
+                                                ? "assets/icons/received_transaction.png"
+                                                : "assets/icons/sent_transaction.png",
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                ?.color),
+                                        title: Text(
+                                            "${isReceived ? "Received".tr() : "Sent".tr()} ${transaction.ticker!}"),
+                                        subtitle: Text(
+                                          transaction.status! > 12
+                                              ? "Confirmed"
+                                              : "Pending",
+                                          style: const TextStyle(
+                                              color: Colors.green),
+                                        ).tr(),
+                                        trailing: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                                "${transaction.amount!} ${transaction.ticker!}"),
+                                            Text(
+                                              "\$${transaction.amount!}",
+                                              style:
+                                                  themeData.textTheme.bodySmall,
+                                            )
+                                          ],
+                                        ),
+                                        tileColor: Colors.transparent),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      )
+                      ),
               ],
             ),
           ),

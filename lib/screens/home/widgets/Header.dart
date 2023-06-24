@@ -28,17 +28,6 @@ Widget header(
         Text(surnameRest, style: const TextStyle(fontSize: 36)),
       ],
     ),
-    Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          user.totalAmount ?? "0.00",
-        ),
-        const Text(
-          "\$",
-        ),
-      ],
-    ),
     Text(
       'walletAddress',
       style: textTheme.subtitle1,
@@ -52,7 +41,7 @@ Widget header(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              user.wallet!,
+              user.wallet ?? "",
               style: TextStyle(color: colorScheme.secondary),
             ),
             Consumer<TokenNotifier>(

@@ -19,7 +19,6 @@ class User {
     fullname = json['fullname'];
     email = json['email'];
     token = json['token'];
-    wallet = json['wallet'];
     totalAmount = json['totalAmount'];
   }
 

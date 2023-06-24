@@ -31,6 +31,7 @@ class _ImportMnemonicState extends State<ImportMnemonic> {
   @override
   Widget build(BuildContext context) {
     var mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
+    mnemonicNotifier.initMnemonic();
     FlutterSecureStorage storage = const FlutterSecureStorage();
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -157,6 +158,7 @@ class _GenerateMnemonicState extends State<GenerateMnemonic> {
               onPressed: () async {
                 if (validateMnemonic(mnemonicPhrase)) {
                   String? userStr = await storage.read(key: "user");
+                  print("New user string:" + (userStr ?? ""));
                   User user = User.fromJson(jsonDecode(userStr!));
                   await mnemonicNotifier.saveMnemonic(mnemonicPhrase, user);
                 } else {
