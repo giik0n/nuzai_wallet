@@ -108,7 +108,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
           type: NodeType.webGLB,
           uri: widget.ipfsUrl ??
               "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-          scale: vector.Vector3(0.2, 0.2, 0.2),
+          scale: vector.Vector3(1.0, 1.0, 1.0),
           position: vector.Vector3(0.0, 0.0, 0.0),
           rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
       bool? didAddNodeToAnchor =
