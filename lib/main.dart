@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
@@ -9,10 +10,17 @@ import 'package:provider/provider.dart';
 import 'config/LocalAuthApi.dart';
 import 'screens/auth/join.dart';
 import 'screens/home/MyHomePage.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    print(await ArCoreController.checkArCoreAvailability());
+    print('\nAR SERVICES INSTALLED?');
+    print(await ArCoreController.checkIsArCoreInstalled());
+  }
+
   runApp(EasyLocalization(
     supportedLocales: const [Locale('en'), Locale('ru')],
     path: 'assets/translations',

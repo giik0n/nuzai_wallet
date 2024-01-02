@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:exomal_wallet/screens/ar/ArScene.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/podo/NFT.dart';
-import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
 import 'package:exomal_wallet/widgets/CustomLoader.dart';
 
 class NftScreen extends StatefulWidget {
@@ -60,7 +60,7 @@ class _NftScreenState extends State<NftScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ArCoreViewScreen(
+                                builder: (context) => ArSceneProvider(
                                     nft.extension == "glb" ? nft.model : null)),
                           );
                         },

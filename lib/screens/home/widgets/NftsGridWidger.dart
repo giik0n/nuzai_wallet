@@ -18,7 +18,7 @@ Widget nftGrid(BuildContext context, User user) {
           image:
               "https://i.pinimg.com/736x/6d/d9/31/6dd931bfb3d368e4ab25090aefcc3c54.jpg",
           model:
-              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+              "https://github.com/KhronosGroup/glTF-Sample-Assets/raw/main/Models/Duck/glTF-Binary/Duck.glb",
           extension: "glb"));
       tokens.add(new NFT(
           description: "Test!",
