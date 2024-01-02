@@ -9,7 +9,7 @@ class LocalAuthApi {
       return await _auth.authenticate(
           localizedReason: "Scan biometric to auth",
           options: const AuthenticationOptions(
-              stickyAuth: true, useErrorDialogs: true));
+              stickyAuth: true, useErrorDialogs: true, biometricOnly: false));
     } on PlatformException catch (error) {
       print(error.stacktrace);
       return false;

@@ -22,40 +22,40 @@ class _ArAndroidState extends State<ArAndroid> {
       ),
       body: ArCoreView(
         onArCoreViewCreated: _onArCoreViewCreated,
-        enableTapRecognizer: true,
+        // enableTapRecognizer: true,
       ),
     );
   }
 
   void _onArCoreViewCreated(ArCoreController controller) {
     arCoreController = controller;
-    arCoreController?.onPlaneTap = _handleOnPlaneTap;
+    // arCoreController?.onPlaneTap = _handleOnPlaneTap;
   }
 
-  void _addToucano(ArCoreHitTestResult plane) {
-    if (objectSelected != null) {
-      final toucanoNode = ArCoreReferenceNode(
-          objectUrl: widget.ipfsUrl ??
-              "https://github.com/KhronosGroup/glTF-Sample-Assets/raw/main/Models/Duck/glTF-Binary/Duck.glb",
-          name: widget.ipfsUrl ??
-              "https://github.com/KhronosGroup/glTF-Sample-Assets/raw/main/Models/Duck/glTF-Binary/Duck.glb",
-          position: plane.pose.translation,
-          rotation: plane.pose.rotation);
+  // void _addToucano(ArCoreHitTestResult plane) {
+  //   if (objectSelected != null) {
+  //     final toucanoNode = ArCoreReferenceNode(
+  //         objectUrl: widget.ipfsUrl ??
+  //             "https://github.com/KhronosGroup/glTF-Sample-Assets/raw/main/Models/Duck/glTF-Binary/Duck.glb",
+  //         name: widget.ipfsUrl ??
+  //             "https://github.com/KhronosGroup/glTF-Sample-Assets/raw/main/Models/Duck/glTF-Binary/Duck.glb",
+  //         position: plane.pose.translation,
+  //         rotation: plane.pose.rotation);
 
-      arCoreController?.addArCoreNodeWithAnchor(toucanoNode);
-    } else {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertDialog(content: Text('Select an object!')),
-      );
-    }
-  }
+  //     arCoreController?.addArCoreNodeWithAnchor(toucanoNode);
+  //   } else {
+  //     showDialog<void>(
+  //       context: context,
+  //       builder: (BuildContext context) =>
+  //           AlertDialog(content: Text('Select an object!')),
+  //     );
+  //   }
+  // }
 
-  void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
-    final hit = hits.first;
-    _addToucano(hit);
-  }
+  // void _handleOnPlaneTap(List<ArCoreHitTestResult> hits) {
+  //   final hit = hits.first;
+  //   _addToucano(hit);
+  // }
 
   @override
   void dispose() {
