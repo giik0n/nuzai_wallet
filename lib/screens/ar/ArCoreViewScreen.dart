@@ -107,7 +107,7 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri: widget.ipfsUrl ??
-              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+              "https://github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Duck/glTF-Binary/Duck.glb",
           scale: vector.Vector3(1.0, 1.0, 1.0),
           position: vector.Vector3(0.0, 0.0, 0.0),
           rotation: vector.Vector4(1.0, 0.0, 0.0, 0.0));
