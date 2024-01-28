@@ -12,7 +12,8 @@ Widget nftGrid(BuildContext context, User user) {
     future: RestClient.loadNFTs(user.token!, user.wallet!),
     builder: (context, snapshot) {
       if (snapshot.hasData) tokens = snapshot.data!;
-      tokens.add(new NFT(
+      if (tokens.isEmpty) {
+              tokens.add(new NFT(
           description: "Let's go Duck!",
           title: 'Rubber Duck',
           image:
@@ -20,15 +21,8 @@ Widget nftGrid(BuildContext context, User user) {
           model:
               "https://github.com/KhronosGroup/glTF-Sample-Models/raw/main/2.0/Duck/glTF-Binary/Duck.glb",
           extension: "glb"));
-      tokens.add(new NFT(
-          description: "Test!",
-          title: 'Test',
-          image:
-              "https://cdna.artstation.com/p/assets/images/images/023/547/606/large/shawna-ray-tiger-perspective.jpg?1579565062",
-          model:
-              "https://github.com/giik0n/nuzai_wallet/raw/main/assets/models/ImageToStl.com_tiger_body_textured.glb",
-          extension: "glb"));
-      //https://github.com/giik0n/nuzai_wallet/raw/main/assets/models/ImageToStl.com_tiger_body_textured.glb
+      }
+
       return tokens.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.all(16.0),
