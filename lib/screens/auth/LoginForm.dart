@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:exomal_wallet/config/LocalAuthApi.dart';
 import 'package:exomal_wallet/provider/TokenNotifier.dart';
 import 'package:exomal_wallet/service/RestClient.dart';
-import 'package:mnemonic/mnemonic.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web3dart/web3dart.dart';
 
 import '../../podo/User.dart';
 import '../../widgets/CustomLoader.dart';

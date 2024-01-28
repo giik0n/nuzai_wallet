@@ -291,33 +291,34 @@ Form registerFieldsForm() => Form(
                             context: context,
                             builder: (_) {
                               return const CustomLoader();
-                            });
+                        });
                         response = await RestClient.register(
                             emailController.text,
                             passController.text,
                             nameController.text);
-                      }
-                      if (response != null && response.statusCode == 201) {
+                      
+                      if (response.statusCode == 201) {
                         User user = User.fromJson(
                             json.decode(response.body)["bodyResponse"]);
                         user.wallet = "";
                         FlutterSecureStorage storage =
                             const FlutterSecureStorage();
-                        storage.write(
+                        await storage.write(
                             key: "email", value: emailController.text);
-                        storage.write(
+                        await storage.write(
                             key: "password", value: passController.text);
                         await storage.write(
                             key: "user", value: jsonEncode(user));
-                        Navigator.pop(context);
                         notifier.setToken(user.token ?? "");
                         emailController.text = "";
                         passController.text = "";
+                        Navigator.pop(context);
+
                       } else {
                         Navigator.pop(context);
                         showErrorDialog(
-                            context, response?.body ?? "Register Error");
-                        print(response?.statusCode);
+                            context, response.body );
+                      }
                       }
                     },
                     child: const Text("btnRegister",

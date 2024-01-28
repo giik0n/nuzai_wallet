@@ -41,8 +41,8 @@ class RestClient {
   }
 
   static Future<Response> register(
-      String email, String password, String fullname) async {
-    return await post(Uri.parse("http://134.209.240.201/api/v2/users/register"),
+      String email, String password, String fullname) {
+    return post(Uri.parse("http://134.209.240.201/api/v2/users/register"),
         headers: {
           "accept": "text/plain",
           "Content-Type": "application/json-patch+json"

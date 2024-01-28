@@ -65,8 +65,6 @@ class _MyAppState extends State<MyApp> {
               return notifier.token.isNotEmpty
                   ? Consumer<MnemonicNotifier>(builder:
                       (context, MnemonicNotifier mnemonicNotifier, child) {
-                      print("Mnemonic:" +
-                          (!mnemonicNotifier.mnemonic.isEmpty).toString());
                       return mnemonicNotifier.mnemonic.isEmpty
                           ? CreateWallet()
                           : (snapshot.data != null && snapshot.data!.length > 0
