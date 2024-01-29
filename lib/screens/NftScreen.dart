@@ -2,11 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:exomal_wallet/screens/ar/ModelViewScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/podo/NFT.dart';
-import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
 import 'package:exomal_wallet/widgets/CustomLoader.dart';
-import 'dart:io' show Platform;
-
-import 'package:flutter_ra_availability/flutter_ra_availability.dart';
 
 class NftScreen extends StatefulWidget {
   final NFT nft;
@@ -18,31 +14,9 @@ class NftScreen extends StatefulWidget {
 }
 
 Future<void> routeToViewer(BuildContext context, NFT nft) async {
-  bool isSupported = await RaAvailability.isSupported ?? false;
-  if (isSupported) {
-    if (Platform.isAndroid) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                ArCoreViewScreen(nft.extension == "glb" ? nft.model : null)),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                ArCoreViewScreen(nft.extension == "glb" ? nft.model : null)),
-      );
-    }
-  } else {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              ModelViewScreen(nft.extension == "glb" ? nft.model : null)),
-    );
-  }
+  MaterialPageRoute(
+      builder: (context) =>
+          ModelViewScreen(nft.extension == "glb" ? nft.model : null));
 }
 
 class _NftScreenState extends State<NftScreen> {
