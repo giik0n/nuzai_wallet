@@ -1,8 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:exomal_wallet/screens/ar/ModelViewScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/podo/NFT.dart';
 import 'package:exomal_wallet/screens/ar/ArCoreViewScreen.dart';
 import 'package:exomal_wallet/widgets/CustomLoader.dart';
+import 'dart:io' show Platform;
+
+import 'package:flutter_ra_availability/flutter_ra_availability.dart';
 
 class NftScreen extends StatefulWidget {
   final NFT nft;
@@ -11,6 +15,34 @@ class NftScreen extends StatefulWidget {
 
   @override
   State<NftScreen> createState() => _NftScreenState();
+}
+
+Future<void> routeToViewer(BuildContext context, NFT nft) async {
+  bool isSupported = await RaAvailability.isSupported ?? false;
+  if (isSupported) {
+    if (Platform.isAndroid) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ArCoreViewScreen(nft.extension == "glb" ? nft.model : null)),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ArCoreViewScreen(nft.extension == "glb" ? nft.model : null)),
+      );
+    }
+  } else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              ModelViewScreen(nft.extension == "glb" ? nft.model : null)),
+    );
+  }
 }
 
 class _NftScreenState extends State<NftScreen> {
@@ -57,12 +89,7 @@ class _NftScreenState extends State<NftScreen> {
                       child: ElevatedButton(
                         style: buttonStyle,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ArCoreViewScreen(
-                                    nft.extension == "glb" ? nft.model : null)),
-                          );
+                          routeToViewer(context, nft);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -119,38 +146,38 @@ class _NftScreenState extends State<NftScreen> {
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 60,
-                          child: ElevatedButton(
-                            style: buttonStyle,
-                            onPressed: () {},
-                            child: const Text(
-                              "send",
-                              style: TextStyle(color: Colors.white),
-                            ).tr(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: SizedBox(
-                          height: 60,
-                          child: ElevatedButton(
-                            style: buttonStyle,
-                            onPressed: () {},
-                            child: const Text(
-                              "Sell",
-                              style: TextStyle(color: Colors.white),
-                            ).tr(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Expanded(
+                  //       child: SizedBox(
+                  //         height: 60,
+                  //         child: ElevatedButton(
+                  //           style: buttonStyle,
+                  //           onPressed: () {},
+                  //           child: const Text(
+                  //             "send",
+                  //             style: TextStyle(color: Colors.white),
+                  //           ).tr(),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 16),
+                  //     Expanded(
+                  //       child: SizedBox(
+                  //         height: 60,
+                  //         child: ElevatedButton(
+                  //           style: buttonStyle,
+                  //           onPressed: () {},
+                  //           child: const Text(
+                  //             "Sell",
+                  //             style: TextStyle(color: Colors.white),
+                  //           ).tr(),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             )),

@@ -102,8 +102,6 @@ class _ArCoreViewScreenState extends State<ArCoreViewScreen> {
     bool? didAddAnchor = await this.arAnchorManager?.addAnchor(newAnchor);
     if (didAddAnchor!) {
       this.anchors.add(newAnchor);
-      // Add note to anchor
-
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri: widget.ipfsUrl ??
