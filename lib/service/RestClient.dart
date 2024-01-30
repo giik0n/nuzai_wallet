@@ -22,6 +22,15 @@ class RestClient {
         body: json.encode({"email": email, "password": password}));
   }
 
+  static Future<Response> resetPassword(String email) async {
+    return await get(
+      Uri.parse("http://134.209.240.201/api/v2/users/resetpassword/$email"),
+      headers: {
+        "accept": "text/plain",
+      },
+    );
+  }
+
   static Future<Response> getCode(String email) {
     return get(Uri.parse("http://134.209.240.201/api/v2/users/sendcode/$email"),
         headers: {

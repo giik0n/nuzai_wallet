@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:exomal_wallet/screens/auth/ResetPasswordScreen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
@@ -43,6 +44,9 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Consumer<TokenNotifier>(
       builder: (context, notifier, child) => FutureBuilder(
         future: !isScanned ? _getBiometricLogin() : Future(() => false),
@@ -129,14 +133,33 @@ class _LoginFormState extends State<LoginForm> {
                       const SizedBox(
                         height: 8,
                       ),
+                      TextButton(
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ResetPasswordScreen(emailController.text))),
+                        child: Text(
+                          style: textTheme.bodySmall,
+                          "Forgot password?".tr(),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       SizedBox(
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
                             onPressed: () async {
-                              loginForm(notifier);
+                              if (_form.currentState!.validate() || false) {
+                                loginForm(notifier);
+                              }
                             },
-                            child: const Text("Sign in").tr(),
+                            child: Text(
+                              "Sign in",
+                              style: TextStyle(color: colorScheme.onPrimary),
+                            ).tr(),
                           )),
                       const SizedBox(
                         height: 8,
@@ -193,7 +216,6 @@ class _LoginFormState extends State<LoginForm> {
       storage.write(key: "password", value: passController.text);
 
       notifier.setToken(user.token ?? "");
-      print(user.token);
       emailController.text = "";
       passController.text = "";
     } else {
@@ -202,14 +224,14 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-Future<void> showErrorDialog(
-    BuildContext context, String responseMessage) async {
+Future<void> showErrorDialog(BuildContext context, String responseMessage,
+    [String? title]) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Error'),
+        title: Text(title ?? 'Error'),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
