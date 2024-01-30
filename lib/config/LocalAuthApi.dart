@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -18,10 +20,23 @@ class LocalAuthApi {
 
   Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
-      return await _auth.getAvailableBiometrics();
+      if (await isDeviceSupported()) {
+        return await _auth.getAvailableBiometrics();
+      } else {
+        return [];
+      }
     } on PlatformException catch (e) {
       print(e);
       return <BiometricType>[];
+    }
+  }
+
+  Future<bool> isDeviceSupported() async {
+    try {
+      return await _auth.isDeviceSupported();
+    } on PlatformException catch (e) {
+      print(e);
+      return false;
     }
   }
 }

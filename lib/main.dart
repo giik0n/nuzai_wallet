@@ -54,38 +54,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late TokenNotifier tokenNotifier;
+  late MnemonicNotifier mnemonicNotifier;
+
   @override
   Widget build(BuildContext context) {
     LocalAuthApi localAuthApi = new LocalAuthApi();
+
+    tokenNotifier = Provider.of<TokenNotifier>(context);
+    mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
+
     return FutureBuilder(
         future: localAuthApi.getAvailableBiometrics(),
         builder: (context, biometrics) {
-          return Consumer<TokenNotifier>(
-            builder: (context, TokenNotifier notifier, child) {
-              return notifier.token.isNotEmpty
-                  ? Consumer<MnemonicNotifier>(builder:
-                      (context, MnemonicNotifier mnemonicNotifier, child) {
-                      return mnemonicNotifier.mnemonic.isEmpty
-                          ? CreateWallet()
-                          : (biometrics.data != null &&
-                                  biometrics.data!.length > 0
-                              ? FutureBuilder(
-                                  future: LocalAuthApi.authenticate(),
-                                  builder: ((context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      if (snapshot.data == true) {
-                                        return MyHomePage();
-                                      } else {
-                                        return CreateWallet();
-                                      }
-                                    }
-                                    return SizedBox.shrink();
-                                  }))
-                              : MyHomePage());
-                    })
-                  : const JoinPage();
-            },
-          );
+          return tokenNotifier.token.isNotEmpty
+              ? mnemonicNotifier.mnemonic.isEmpty
+                  ? CreateWallet()
+                  : (biometrics.data != null && biometrics.data!.length > 0
+                      ? FutureBuilder(
+                          future: LocalAuthApi.authenticate(),
+                          builder: ((context, snapshot) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data == true) {
+                                return MyHomePage();
+                              } else {
+                                return JoinPage();
+                              }
+                            }
+                            return SizedBox.shrink();
+                          }))
+                      : MyHomePage())
+              : const JoinPage();
         });
   }
 }
