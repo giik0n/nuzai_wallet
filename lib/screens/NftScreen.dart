@@ -13,10 +13,12 @@ class NftScreen extends StatefulWidget {
   State<NftScreen> createState() => _NftScreenState();
 }
 
-Future<void> routeToViewer(BuildContext context, NFT nft) async {
-  MaterialPageRoute(
-      builder: (context) =>
-          ModelViewScreen(nft.extension == "glb" ? nft.model : null));
+void routeToViewer(BuildContext context, NFT nft) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              ModelViewScreen(nft.extension == "glb" ? nft.model : null)));
 }
 
 class _NftScreenState extends State<NftScreen> {
@@ -44,7 +46,7 @@ class _NftScreenState extends State<NftScreen> {
                     child: Image.network(
                       nft.image!,
                       fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child,
+                      loadingBuilder: (BuildContext context1, Widget child,
                           ImageChunkEvent? loadingProgress) {
                         if (loadingProgress == null) {
                           return child;

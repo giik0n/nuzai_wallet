@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     LocalAuthApi localAuthApi = new LocalAuthApi();
     return FutureBuilder(
         future: localAuthApi.getAvailableBiometrics(),
-        builder: (context, snapshot) {
+        builder: (context, biometrics) {
           return Consumer<TokenNotifier>(
             builder: (context, TokenNotifier notifier, child) {
               return notifier.token.isNotEmpty
@@ -67,7 +67,8 @@ class _MyAppState extends State<MyApp> {
                       (context, MnemonicNotifier mnemonicNotifier, child) {
                       return mnemonicNotifier.mnemonic.isEmpty
                           ? CreateWallet()
-                          : (snapshot.data != null && snapshot.data!.length > 0
+                          : (biometrics.data != null &&
+                                  biometrics.data!.length > 0
                               ? FutureBuilder(
                                   future: LocalAuthApi.authenticate(),
                                   builder: ((context, snapshot) {

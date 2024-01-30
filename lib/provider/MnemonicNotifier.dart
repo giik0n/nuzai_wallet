@@ -20,8 +20,6 @@ class MnemonicNotifier extends ChangeNotifier {
     user.wallet = await RPCService.getMyAddressHex(user.email ?? "");
     _storage.write(key: "user", value: jsonEncode(user));
     notifyListeners();
-    print(user);
-    print("saved mnemonic");
   }
 
   initMnemonic() async {

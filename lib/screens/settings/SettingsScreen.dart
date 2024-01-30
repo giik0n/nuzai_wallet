@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
 import 'package:exomal_wallet/screens/settings/selectLanguageDialog.dart';
-import 'package:exomal_wallet/screens/settings/selectNetworkDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
