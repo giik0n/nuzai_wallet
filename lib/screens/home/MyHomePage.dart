@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: FutureBuilder(
           future: loadUser(),
           builder: (builder, snapshot) {
-            if (snapshot.data != null) {
+            if (snapshot.hasData) {
               user = snapshot.data!;
               print(user!.toJson());
             }

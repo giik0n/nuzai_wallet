@@ -214,15 +214,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                       isEnabled);
                                                   setState(() {});
                                                 }
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: isEnabled
-                                                            ? const Text(
-                                                                    'fingerprintEnabled')
-                                                                .tr()
-                                                            : const Text(
-                                                                    'fingerprintDisabled')
-                                                                .tr()));
+                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                    backgroundColor: tileColor,
+                                                    content: isEnabled
+                                                        ? Text('fingerprintEnabled',
+                                                                style: TextStyle(
+                                                                    color: colorScheme
+                                                                        .secondary))
+                                                            .tr()
+                                                        : Text('fingerprintDisabled',
+                                                                style: TextStyle(
+                                                                    color: colorScheme
+                                                                        .secondary))
+                                                            .tr()));
                                               },
                                               value:
                                                   isFingerprintLogin ?? false,
@@ -264,7 +268,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     Navigator.pop(context);
                                   }),
                                   child: Text(
-                                    "Delete wallet from device",
+                                    "Delete wallet from device".tr(),
                                     selectionColor: Colors.red,
                                     style: TextStyle(
                                       color: Colors.red,
@@ -284,14 +288,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<bool> getSettings() async {
-    LocalAuthApi localAuthApi = LocalAuthApi();
-
     final prefs = await SharedPreferences.getInstance();
     isNews = prefs.getBool('sendNews') ?? false;
     selectedLocale = prefs.getString('selectedLocale') ?? 'en';
     isFingerprintLogin = prefs.getBool("isFingerprintLogin") ?? false;
     isFaceLogin = prefs.getBool("isFaceLogin") ?? false;
-    avaliableTypes = await localAuthApi.getAvailableBiometrics();
+    avaliableTypes = await LocalAuthApi.getAvailableBiometrics();
     return true;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:exomal_wallet/widgets/CustomLoader.dart';
 import 'package:flutter/material.dart';
 import 'package:exomal_wallet/provider/MnemonicNotifier.dart';
 import 'package:exomal_wallet/provider/TokenNotifier.dart';
@@ -59,32 +60,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    LocalAuthApi localAuthApi = new LocalAuthApi();
-
     tokenNotifier = Provider.of<TokenNotifier>(context);
     mnemonicNotifier = Provider.of<MnemonicNotifier>(context);
-
-    return FutureBuilder(
-        future: localAuthApi.getAvailableBiometrics(),
-        builder: (context, biometrics) {
-          return tokenNotifier.token.isNotEmpty
-              ? mnemonicNotifier.mnemonic.isEmpty
-                  ? CreateWallet()
-                  : (biometrics.data != null && biometrics.data!.length > 0
-                      ? FutureBuilder(
-                          future: LocalAuthApi.authenticate(),
-                          builder: ((context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data == true) {
-                                return MyHomePage();
-                              } else {
-                                return JoinPage();
-                              }
-                            }
-                            return SizedBox.shrink();
-                          }))
-                      : MyHomePage())
-              : const JoinPage();
-        });
+    print("mnemonicNotifier.mnemonic" + mnemonicNotifier.mnemonic);
+    return tokenNotifier.token.isNotEmpty
+        ? mnemonicNotifier.mnemonic.isNotEmpty
+            ? FutureBuilder(
+                future: LocalAuthApi.authenticate(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!) {
+                      return MyHomePage();
+                    } else {
+                      return JoinPage();
+                    }
+                  } else {
+                    return CustomLoader();
+                  }
+                }))
+            : CreateWallet()
+        : JoinPage();
   }
 }

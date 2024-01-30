@@ -1,5 +1,4 @@
-
-  import 'dart:convert';
+import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +9,15 @@ import '../../podo/User.dart';
 import '../../service/RestClient.dart';
 import '../../widgets/CustomLoader.dart';
 
-Future changeUserDialog(User user, String hint, String key, BuildContext context) => showDialog(
+Future changeUserDialog(
+    User user, String hint, String key, BuildContext context) {
+  Color tileColor = Theme.of(context).listTileTheme.tileColor!;
+
+  return showDialog(
       context: context,
       builder: (context) {
         TextEditingController controller = TextEditingController();
+        ColorScheme colorScheme = Theme.of(context).colorScheme;
 
         switch (key) {
           case "fullname":
@@ -25,6 +29,7 @@ Future changeUserDialog(User user, String hint, String key, BuildContext context
         }
 
         return Dialog(
+          surfaceTintColor: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -34,6 +39,9 @@ Future changeUserDialog(User user, String hint, String key, BuildContext context
                   controller: controller,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(hintText: hint),
+                ),
+                SizedBox(
+                  height: 8,
                 ),
                 ElevatedButton(
                     onPressed: () async {
@@ -52,10 +60,13 @@ Future changeUserDialog(User user, String hint, String key, BuildContext context
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(response.statusCode == 200
-                                    ? "Success".tr()
-                                    : "Error")
-                                .tr()));
+                            backgroundColor: tileColor,
+                            content: Text(
+                              response.statusCode == 200
+                                  ? "Success".tr()
+                                  : "Error",
+                              style: TextStyle(color: colorScheme.secondary),
+                            ).tr()));
                         if (response.statusCode == 200) {
                           FlutterSecureStorage storage =
                               const FlutterSecureStorage();
@@ -78,9 +89,13 @@ Future changeUserDialog(User user, String hint, String key, BuildContext context
                         }
                       }
                     },
-                    child: const Text("submit").tr())
+                    child: Text(
+                      "submit",
+                      style: TextStyle(color: colorScheme.onPrimary),
+                    ).tr())
               ],
             ),
           ),
         );
       });
+}

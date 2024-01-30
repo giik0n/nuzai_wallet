@@ -12,9 +12,9 @@ class TokenNotifier extends ChangeNotifier {
     initToken();
   }
 
-  setToken(String newToken) {
+  setToken(String newToken) async {
     _token = newToken;
-    _storage.write(key: "token", value: newToken);
+    await _storage.write(key: "token", value: newToken);
     newToken == ""
         ? null
         : Timer.periodic(const Duration(minutes: 10), (_) => logOut());
