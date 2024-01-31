@@ -294,6 +294,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     isFingerprintLogin = prefs.getBool("isFingerprintLogin") ?? false;
     isFaceLogin = prefs.getBool("isFaceLogin") ?? false;
     avaliableTypes = await LocalAuthApi.getAvailableBiometrics();
+    if (avaliableTypes!.isEmpty) {
+      await prefs.setBool('isFingerprintLogin', false);
+      await prefs.setBool('isFaceLogin', false);
+    }
     return true;
   }
 }

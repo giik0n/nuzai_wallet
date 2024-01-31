@@ -9,10 +9,14 @@ class LocalAuthApi {
     bool onlyBio = biometrics.contains(BiometricType.face) ||
         biometrics.contains(BiometricType.face);
     try {
-      return await _auth.authenticate(
-          localizedReason: "Scan biometric to auth",
-          options: AuthenticationOptions(
-              stickyAuth: true, useErrorDialogs: true, biometricOnly: onlyBio));
+      return biometrics.isEmpty
+          ? true
+          : await _auth.authenticate(
+              localizedReason: "Scan biometric to auth",
+              options: AuthenticationOptions(
+                  stickyAuth: true,
+                  useErrorDialogs: true,
+                  biometricOnly: onlyBio));
     } on PlatformException catch (error) {
       print(error.stacktrace);
       return false;
